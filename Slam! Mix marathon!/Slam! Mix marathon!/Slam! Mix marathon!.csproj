@@ -4,20 +4,42 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
-    <ProjectGuid>{CAB4FADD-B3EC-4113-91AB-780EE1B62C11}</ProjectGuid>
+    <ProjectGuid>{85CC8C35-DD31-4C5A-A8DE-9B2939344FB0}</ProjectGuid>
     <OutputType>AppContainerExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Slam__Mix_Marathon</RootNamespace>
-    <AssemblyName>Slam! Mix Marathon</AssemblyName>
+    <RootNamespace>Slam__Mix_marathon_</RootNamespace>
+    <AssemblyName>Slam! Mix marathon!</AssemblyName>
     <DefaultLanguage>en-US</DefaultLanguage>
     <TargetPlatformIdentifier>UAP</TargetPlatformIdentifier>
-    <TargetPlatformVersion>10.0.10240.0</TargetPlatformVersion>
+    <TargetPlatformVersion>10.0.10586.0</TargetPlatformVersion>
     <TargetPlatformMinVersion>10.0.10240.0</TargetPlatformMinVersion>
     <MinimumVisualStudioVersion>14</MinimumVisualStudioVersion>
-    <EnableDotNetNativeCompatibleProfile>true</EnableDotNetNativeCompatibleProfile>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{A5A43C5B-DE2A-4C0C-9213-0A381AF9435A};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
-    <PackageCertificateKeyFile>Slam! Mix Marathon_TemporaryKey.pfx</PackageCertificateKeyFile>
+    <PackageCertificateKeyFile>Slam! Mix marathon!_TemporaryKey.pfx</PackageCertificateKeyFile>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x86\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE;NETFX_CORE;WINDOWS_UWP</DefineConstants>
+    <NoWarn>;2008</NoWarn>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+    <ErrorReport>prompt</ErrorReport>
+    <Prefer32Bit>true</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
+    <OutputPath>bin\x86\Release\</OutputPath>
+    <DefineConstants>TRACE;NETFX_CORE;WINDOWS_UWP</DefineConstants>
+    <Optimize>true</Optimize>
+    <NoWarn>;2008</NoWarn>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+    <ErrorReport>prompt</ErrorReport>
+    <Prefer32Bit>true</Prefer32Bit>
+    <UseDotNetNativeToolchain>true</UseDotNetNativeToolchain>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|ARM'">
     <DebugSymbols>true</DebugSymbols>
@@ -65,32 +87,11 @@
     <Prefer32Bit>true</Prefer32Bit>
     <UseDotNetNativeToolchain>true</UseDotNetNativeToolchain>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
-    <DebugSymbols>true</DebugSymbols>
-    <OutputPath>bin\x86\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE;NETFX_CORE;WINDOWS_UWP</DefineConstants>
-    <NoWarn>;2008</NoWarn>
-    <DebugType>full</DebugType>
-    <PlatformTarget>x86</PlatformTarget>
-    <UseVSHostingProcess>false</UseVSHostingProcess>
-    <ErrorReport>prompt</ErrorReport>
-    <Prefer32Bit>true</Prefer32Bit>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
-    <OutputPath>bin\x86\Release\</OutputPath>
-    <DefineConstants>TRACE;NETFX_CORE;WINDOWS_UWP</DefineConstants>
-    <Optimize>true</Optimize>
-    <NoWarn>;2008</NoWarn>
-    <DebugType>pdbonly</DebugType>
-    <PlatformTarget>x86</PlatformTarget>
-    <UseVSHostingProcess>false</UseVSHostingProcess>
-    <ErrorReport>prompt</ErrorReport>
-    <Prefer32Bit>true</Prefer32Bit>
-    <UseDotNetNativeToolchain>true</UseDotNetNativeToolchain>
-  </PropertyGroup>
   <ItemGroup>
     <!-- A reference to the entire .Net Framework and Windows SDK are automatically included -->
-    <Content Include="AdMediator.config" />
+    <Content Include="ApplicationInsights.config">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <None Include="project.json" />
   </ItemGroup>
   <ItemGroup>
@@ -104,8 +105,8 @@
       <DependentUpon>MixDetail.xaml</DependentUpon>
     </Compile>
     <Compile Include="Converters\BooleanToOppositeVisibilityConverter.cs" />
-    <Compile Include="Converters\OppositeBoolConverter.cs" />
     <Compile Include="Converters\BooleanToVisiblityConverter.cs" />
+    <Compile Include="Converters\OppositeBoolConverter.cs" />
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
@@ -115,13 +116,9 @@
     <AppxManifest Include="Package.appxmanifest">
       <SubType>Designer</SubType>
     </AppxManifest>
-    <None Include="Slam! Mix Marathon_TemporaryKey.pfx" />
+    <None Include="Slam! Mix marathon!_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Assets\MediaPlayer\appbar.transport.ff.rest.png" />
-    <Content Include="Assets\MediaPlayer\appbar.transport.pause.rest.png" />
-    <Content Include="Assets\MediaPlayer\appbar.transport.play.rest.png" />
-    <Content Include="Assets\MediaPlayer\appbar.transport.rew.rest.png" />
     <Content Include="Assets\MixMarathon.png" />
     <Content Include="Assets\SlamLogo.png" />
     <Content Include="Properties\Default.rd.xml" />
@@ -139,12 +136,12 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Page Include="Controls\MediaPlayer.xaml">
-      <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Controls\MixDetail.xaml">
-      <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="MainPage.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -164,6 +161,14 @@
       <Project>{09f3efe7-ac3c-4189-90f1-c7bf9e01af96}</Project>
       <Name>XamlControlLibrary</Name>
     </ProjectReference>
+    <ProjectReference Include="..\BackgroundAudioShared\BackgroundAudioShared.csproj">
+      <Project>{62c43640-d9fb-41b8-81b7-a02be8facd09}</Project>
+      <Name>BackgroundAudioShared</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\BackgroundAudioTask\BackgroundAudioTask.csproj">
+      <Project>{8d0109b3-fea4-4740-b850-24a1522348cb}</Project>
+      <Name>BackgroundAudioTask</Name>
+    </ProjectReference>
     <ProjectReference Include="..\SlamLogic\SlamLogic.csproj">
       <Project>{d897d491-d2ba-42d3-a1cf-8e51824412f5}</Project>
       <Name>SlamLogic</Name>
@@ -171,7 +176,7 @@
   </ItemGroup>
   <ItemGroup>
     <SDKReference Include="Microsoft.AdMediator.Universal, Version=1.0">
-      <Name>Microsoft.AdMediator.Universal</Name>
+      <Name>Microsoft Advertising Universal SDK</Name>
     </SDKReference>
     <SDKReference Include="Microsoft.Advertising.Xaml, Version=10.0">
       <Name>Microsoft Advertising SDK for XAML</Name>
@@ -179,15 +184,9 @@
     <SDKReference Include="Microsoft.VCLibs, Version=14.0">
       <Name>Visual C++ 2015 Runtime for Universal Windows Platform Apps</Name>
     </SDKReference>
-    <SDKReference Include="Microsoft.VCLibs.120, Version=14.0">
-      <Name>Microsoft Visual C++ 2013 Runtime Package for Windows Universal</Name>
-    </SDKReference>
     <SDKReference Include="SQLite.UAP.2015, Version=3.9.2">
       <Name>SQLite for Universal App Platform</Name>
     </SDKReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Icons\" />
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
