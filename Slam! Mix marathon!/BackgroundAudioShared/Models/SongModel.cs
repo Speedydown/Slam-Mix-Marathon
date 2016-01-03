@@ -15,6 +15,7 @@ using System.Linq;
 using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
+using Windows.Storage;
 
 namespace BackgroundAudioShared
 {
@@ -33,5 +34,8 @@ namespace BackgroundAudioShared
 
         [DataMember]
         public Uri AlbumArtUri { get; set; }
+
+        [DataMember]
+        public string Mp3URL { get; set; }
     }
 }

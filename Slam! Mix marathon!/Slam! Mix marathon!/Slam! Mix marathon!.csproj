@@ -104,9 +104,6 @@
     <Compile Include="Controls\MixDetail.xaml.cs">
       <DependentUpon>MixDetail.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Converters\BooleanToOppositeVisibilityConverter.cs" />
-    <Compile Include="Converters\BooleanToVisiblityConverter.cs" />
-    <Compile Include="Converters\OppositeBoolConverter.cs" />
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
@@ -160,10 +157,6 @@
     <ProjectReference Include="..\..\..\Speedydown.nl-API\XamlControlLibrary\XamlControlLibrary.csproj">
       <Project>{09f3efe7-ac3c-4189-90f1-c7bf9e01af96}</Project>
       <Name>XamlControlLibrary</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\BackgroundAudioShared\BackgroundAudioShared.csproj">
-      <Project>{62c43640-d9fb-41b8-81b7-a02be8facd09}</Project>
-      <Name>BackgroundAudioShared</Name>
     </ProjectReference>
     <ProjectReference Include="..\BackgroundAudioTask\BackgroundAudioTask.csproj">
       <Project>{8d0109b3-fea4-4740-b850-24a1522348cb}</Project>

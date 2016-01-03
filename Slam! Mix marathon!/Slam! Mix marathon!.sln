@@ -17,8 +17,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BaseLogic", "..\..\Speedydo
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BackgroundAudioTask", "BackgroundAudioTask\BackgroundAudioTask.csproj", "{8D0109B3-FEA4-4740-B850-24A1522348CB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BackgroundAudioShared", "BackgroundAudioShared\BackgroundAudioShared.csproj", "{62C43640-D9FB-41B8-81B7-A02BE8FACD09}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -145,20 +143,6 @@ Global
 		{8D0109B3-FEA4-4740-B850-24A1522348CB}.Release|x64.Build.0 = Release|x64
 		{8D0109B3-FEA4-4740-B850-24A1522348CB}.Release|x86.ActiveCfg = Release|x86
 		{8D0109B3-FEA4-4740-B850-24A1522348CB}.Release|x86.Build.0 = Release|x86
-		{62C43640-D9FB-41B8-81B7-A02BE8FACD09}.Debug|Any CPU.ActiveCfg = Debug|x86
-		{62C43640-D9FB-41B8-81B7-A02BE8FACD09}.Debug|ARM.ActiveCfg = Debug|ARM
-		{62C43640-D9FB-41B8-81B7-A02BE8FACD09}.Debug|ARM.Build.0 = Debug|ARM
-		{62C43640-D9FB-41B8-81B7-A02BE8FACD09}.Debug|x64.ActiveCfg = Debug|x64
-		{62C43640-D9FB-41B8-81B7-A02BE8FACD09}.Debug|x64.Build.0 = Debug|x64
-		{62C43640-D9FB-41B8-81B7-A02BE8FACD09}.Debug|x86.ActiveCfg = Debug|x86
-		{62C43640-D9FB-41B8-81B7-A02BE8FACD09}.Debug|x86.Build.0 = Debug|x86
-		{62C43640-D9FB-41B8-81B7-A02BE8FACD09}.Release|Any CPU.ActiveCfg = Release|x86
-		{62C43640-D9FB-41B8-81B7-A02BE8FACD09}.Release|ARM.ActiveCfg = Release|ARM
-		{62C43640-D9FB-41B8-81B7-A02BE8FACD09}.Release|ARM.Build.0 = Release|ARM
-		{62C43640-D9FB-41B8-81B7-A02BE8FACD09}.Release|x64.ActiveCfg = Release|x64
-		{62C43640-D9FB-41B8-81B7-A02BE8FACD09}.Release|x64.Build.0 = Release|x64
-		{62C43640-D9FB-41B8-81B7-A02BE8FACD09}.Release|x86.ActiveCfg = Release|x86
-		{62C43640-D9FB-41B8-81B7-A02BE8FACD09}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

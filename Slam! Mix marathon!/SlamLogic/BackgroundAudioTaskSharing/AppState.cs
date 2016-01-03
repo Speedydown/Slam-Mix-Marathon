@@ -12,25 +12,16 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BackgroundAudioShared.Messages
+namespace SlamLogic.BackgroundAudioTaskSharing
 {
-    [DataContract]
-    public class TrackChangedMessage
+    public enum AppState
     {
-        public TrackChangedMessage()
-        {
-        }
-
-        public TrackChangedMessage(int InternalMixID)
-        {
-            this.InternalMixID = InternalMixID;
-        }
-
-        [DataMember]
-        public int InternalMixID;
+        Unknown,
+        Active,
+        Suspended
     }
+    
 }

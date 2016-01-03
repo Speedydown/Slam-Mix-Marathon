@@ -7,7 +7,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:Controls="using:Slam__Mix_Marathon.Controls"
-    xmlns:Converters="using:Slam__Mix_Marathon.Converters"
+    xmlns:Converters="using:BaseLogic.Converters"
     mc:Ignorable="d">
 
     <Page.Transitions>
@@ -41,12 +41,43 @@
                     Grid.Row="1"
                     MaxLines="1"
                     Style="{ThemeResource ListBodyTextBlockStyle}" />
-                <StackPanel Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" HorizontalAlignment="Right" Orientation="Horizontal">
+                <StackPanel Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" HorizontalAlignment="Right" Margin="0,0,10,0" Orientation="Horizontal">
                     <SymbolIcon Symbol="Save" Margin="2" Visibility="{Binding Downloaded, Converter={StaticResource BooleanToVisibilityConverter}}"/>
                     <SymbolIcon Symbol="Download" Margin="2" Visibility="{Binding IsDownloading, Converter={StaticResource BooleanToVisibilityConverter}}"/>
-                    <SymbolIcon Symbol="Play" Margin="2,2,10,2" Visibility="{Binding Playing, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+                    <SymbolIcon Symbol="Play" Margin="2" Visibility="{Binding Playing, Converter={StaticResource BooleanToVisibilityConverter}}"/>
                 </StackPanel>
-                <ProgressBar Margin="0,2" Grid.Row="2" Grid.ColumnSpan="2" Value="{Binding DownloadProgress}" Visibility="{Binding IsDownloading, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+                <ProgressBar Margin="0,2" Grid.Row="2" Foreground="White" Grid.ColumnSpan="2" Value="{Binding DownloadProgress}" Visibility="{Binding IsDownloading, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+                <ListView ItemsSource="{Binding Stars}" IsHitTestVisible="False" IsItemClickEnabled="False" Grid.Row="3" HorizontalAlignment="Left">
+                    <ListView.ItemContainerStyle>
+                        <Style TargetType="ListViewItem">
+                            
+                            <Setter Property="MinHeight"
+                                    Value="0"/>
+                            <Setter Property="MinWidth"
+                                    Value="0"/>
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="ListViewItem">
+                                        <ListViewItemPresenter ContentMargin="0"
+                                                           Padding="0"  />
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+                    </ListView.ItemContainerStyle>
+                    <ListView.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <ItemsWrapGrid Orientation="Horizontal" MaximumRowsOrColumns="5"></ItemsWrapGrid>
+                        </ItemsPanelTemplate>
+                    </ListView.ItemsPanel>
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <Grid>
+                                <SymbolIcon Symbol="Favorite" Visibility="{Binding}" Foreground="White" />
+                            </Grid>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
             </Grid>
         </DataTemplate>
 

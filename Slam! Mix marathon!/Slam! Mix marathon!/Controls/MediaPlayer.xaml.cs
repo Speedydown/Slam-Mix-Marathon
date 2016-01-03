@@ -40,12 +40,12 @@ namespace Slam__Mix_Marathon.Controls
 
         private void PlayButton_Click(object sender, RoutedEventArgs e)
         {
-            ViewModel.Play();
+            ViewModel.PlayPause();
         }
 
-        private async void NextButton_Click(object sender, RoutedEventArgs e)
+        private void NextButton_Click(object sender, RoutedEventArgs e)
         {
-            await ViewModel.Next();
+            ViewModel.Next();
         }
     }
 }

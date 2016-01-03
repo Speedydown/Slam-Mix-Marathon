@@ -21,5 +21,12 @@ namespace BackgroundAudioShared.Messages
     [DataContract]
     public class StartPlaybackMessage
     {
+        [DataMember]
+        public int InternalMixID { get; private set; }
+
+        public StartPlaybackMessage(int InternalMixID)
+        {
+            this.InternalMixID = InternalMixID;
+        }
     }
 }

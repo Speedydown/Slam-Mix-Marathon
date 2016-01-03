@@ -52,6 +52,11 @@ namespace SlamLogic.DataHandlers
             }
         }
 
+        public Mix GetMixByID(int ID)
+        {
+            return GetItems<Mix>().Single(m => m.InternalID == ID);
+        }
+
         public async Task<Mix[]> GetMixes(bool Offline)
         {
             if (!Offline)

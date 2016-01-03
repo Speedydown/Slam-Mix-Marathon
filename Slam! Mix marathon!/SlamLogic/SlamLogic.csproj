@@ -114,12 +114,28 @@
     <PRIResource Include="SlamLogicResource.resw" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BackgroundAudioTaskSharing\ApplicationSettingsConstants.cs" />
+    <Compile Include="BackgroundAudioTaskSharing\ApplicationSettingsHelper.cs" />
+    <Compile Include="BackgroundAudioTaskSharing\AppState.cs" />
+    <Compile Include="BackgroundAudioTaskSharing\BackgroundTaskState.cs" />
     <Compile Include="DataHandlers\MixDataHandler.cs" />
+    <Compile Include="BackgroundAudioTaskSharing\EnumHelper.cs" />
+    <Compile Include="BackgroundAudioTaskSharing\JsonHelper.cs" />
+    <Compile Include="BackgroundAudioTaskSharing\Messages\AppResumedMessage.cs" />
+    <Compile Include="BackgroundAudioTaskSharing\Messages\AppSuspendedMessage.cs" />
+    <Compile Include="BackgroundAudioTaskSharing\Messages\BackgroundAudioTaskStartedMessage.cs" />
+    <Compile Include="BackgroundAudioTaskSharing\Messages\MessageService.cs" />
+    <Compile Include="BackgroundAudioTaskSharing\Messages\SkipNextMessage.cs" />
+    <Compile Include="BackgroundAudioTaskSharing\Messages\SkipPreviousMessage.cs" />
+    <Compile Include="BackgroundAudioTaskSharing\Messages\StartPlaybackMessage.cs" />
+    <Compile Include="BackgroundAudioTaskSharing\Messages\TrackChangedMessage.cs" />
+    <Compile Include="BackgroundAudioTaskSharing\Messages\UpdatePlaylistMessage.cs" />
     <Compile Include="Model\Mix.cs" />
     <Compile Include="Model\Warning.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ViewModels\MainpageViewModel.cs" />
     <Compile Include="ViewModels\MediaPlayerViewModel.cs" />
+    <Compile Include="ViewModels\MediaPlayerViewModel_BackgroundPlayer.cs" />
     <Content Include="Properties\SlamLogic.rd.xml" />
   </ItemGroup>
   <ItemGroup>

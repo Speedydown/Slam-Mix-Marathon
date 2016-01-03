@@ -45,7 +45,7 @@ namespace Slam__Mix_Marathon
             {
                 await ViewModel.GetMixesTask;
             }
-
+            
             MasterListView.SelectedItem = ViewModel.CurrentMix;
         }
 

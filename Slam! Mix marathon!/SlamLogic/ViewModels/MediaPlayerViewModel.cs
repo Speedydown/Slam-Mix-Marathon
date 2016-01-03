@@ -1,11 +1,15 @@
 ﻿using BaseLogic;
+using SlamLogic.BackgroundAudioTaskSharing;
+using SlamLogic.BackgroundAudioTaskSharing.Messages;
 using SlamLogic.DataHandlers;
 using SlamLogic.Model;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.Core;
 using Windows.Foundation.Collections;
@@ -15,15 +19,14 @@ using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media;
+using Windows.UI.Xaml.Media.Imaging;
 
 namespace SlamLogic.ViewModels
 {
-    public class MediaPlayerViewModel : ViewModel
+    public partial class MediaPlayerViewModel : ViewModel
     {
         public static readonly MediaPlayerViewModel instance = new MediaPlayerViewModel();
         private static DispatcherTimer UpdateTimer = null;
-
-        private SystemMediaTransportControls systemMediaControls;
 
         public Visibility StopButtonVisibility { get; private set; }
         public Visibility PlayButtonVisibility { get; private set; }
@@ -38,95 +41,35 @@ namespace SlamLogic.ViewModels
 
         public bool UpdateBindings { get; private set; }
 
+        //BackgroundMediaPlayer:
+        private AutoResetEvent backgroundAudioTaskStarted;
+        private bool _isMyBackgroundTaskRunning = false;
+        private Dictionary<string, BitmapImage> albumArtCache = new Dictionary<string, BitmapImage>();
+        const int RPC_S_SERVER_UNAVAILABLE = -2147023174; // 0x800706BA
+
         private MediaPlayerViewModel() : base()
         {
             PlayButtonIsEnabled = false;
             PreviousButtonIsEnabled = false;
-            PreviousButtonIsEnabled = false;
+            NextButtonIsEnabled = false;
 
             StopButtonVisibility = Visibility.Collapsed;
             PlayButtonVisibility = Visibility.Visible;
 
-            // Hook up app to system transport controls.
-            systemMediaControls = SystemMediaTransportControls.GetForCurrentView();
-            systemMediaControls.ButtonPressed += SystemControls_ButtonPressed;
+            // Setup the initialization lock
+            backgroundAudioTaskStarted = new AutoResetEvent(false);
 
-            // Register to handle the following system transpot control buttons.
-            systemMediaControls.IsPlayEnabled = true;
-            systemMediaControls.IsPauseEnabled = true;
-            systemMediaControls.IsStopEnabled = true;
-            systemMediaControls.IsNextEnabled = true;
-            systemMediaControls.IsPreviousEnabled = true;
-
-            BackgroundMediaPlayer.Current.CurrentStateChanged += BackgroundMediaPlayer_CurrentStateChanged;
-            BackgroundMediaPlayer.MessageReceivedFromBackground += BackgroundMediaPlayer_MessageReceivedFromBackground;
-            BackgroundMediaPlayer.Current.MediaOpened += Current_MediaOpened;
-            BackgroundMediaPlayer.Current.MediaEnded += Current_MediaEnded;
-
-            Task.Run(async () =>
-            {
-                await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
-                {
-                    UpdateTimer = new DispatcherTimer();
-                    UpdateTimer.Interval = TimeSpan.FromMilliseconds(500);
-                    UpdateTimer.Tick += delegate { UpdateTimerPosition(); };
-                    UpdateTimer.Start();
-                });
-            });
+            // Adding App suspension handlers here so that we can unsubscribe handlers 
+            // that access BackgroundMediaPlayer events
+            Application.Current.Suspending += ForegroundApp_Suspending;
+            Application.Current.Resuming += ForegroundApp_Resuming;
+            ApplicationSettingsHelper.SaveSettingsValue(ApplicationSettingsConstants.AppState, AppState.Active.ToString());
         }
-
+   
         private void UpdateTimerPosition()
         {
-            Position = BackgroundMediaPlayer.Current.Position.ToString(@"mm\:ss");
-            NotifyPropertyChanged("Position");
-        }
-
-        private void Current_MediaOpened(MediaPlayer sender, object args)
-        {
-            DisplayUpdater();
-        }
-
-        private async void Current_MediaEnded(MediaPlayer sender, object args)
-        {
-            await Next();
-        }
-
-        private void BackgroundMediaPlayer_MessageReceivedFromBackground(object sender, MediaPlayerDataReceivedEventArgs e)
-        {
-            if (e.Data.First().Key == "ResetBindings")
-            {
-                RefreshBindings();
-            }
-        }
-
-        private async void SystemControls_ButtonPressed(SystemMediaTransportControls sender, SystemMediaTransportControlsButtonPressedEventArgs args)
-        {
-            switch (args.Button)
-            {
-                case SystemMediaTransportControlsButton.Play:
-                    Play();
-                    break;
-                case SystemMediaTransportControlsButton.Pause:
-                    Pause();
-                    break;
-                case SystemMediaTransportControlsButton.Next:
-                    await Next();
-                    break;
-                case SystemMediaTransportControlsButton.Previous:
-                    Previous();
-                    break;
-                case SystemMediaTransportControlsButton.Stop:
-                    Stop();
-                    break;
-                default:
-                    break;                    
-            }
-
-            ValueSet vs = new ValueSet();
-            vs.Add("ResetBindings", "true");
-
-            BackgroundMediaPlayer.SendMessageToForeground(vs);
-
+                Position = BackgroundMediaPlayer.Current.Position.ToString(@"mm\:ss");
+                NotifyPropertyChanged("Position");
         }
 
         private void RefreshBindings()
@@ -140,6 +83,14 @@ namespace SlamLogic.ViewModels
             NotifyPropertyChanged("PlayButtonVisibility");
         }
 
+        public void CheckIfBackgroundTaskIsRunning()
+        {
+            if (CurrentTrack != null)
+            {
+                MessageService.SendMessageToBackground(new UpdatePlaylistMessage());
+            }
+        }
+
         public async Task PlayMix(Mix CurrentTrack)
         {
             if (this.CurrentTrack != null)
@@ -148,122 +99,102 @@ namespace SlamLogic.ViewModels
             }
 
             this.CurrentTrack = CurrentTrack;
-
             TrackQueue = MainpageViewModel.instance.Mixes;
+            this.CurrentTrack.Playing = true;
+            CurrentTrack.UpdateTimesPlayed();
 
-            if (this.CurrentTrack.Downloaded)
+            await Task.Run(() =>
             {
-                BackgroundMediaPlayer.Current.SetStreamSource(await (await this.CurrentTrack.GetDownloadedFile()).OpenReadAsync());
+                // Start the background task if it wasn't running
+                if (!IsMyBackgroundTaskRunning || MediaPlayerState.Closed == CurrentPlayer.CurrentState)
+                {
+                    // First update the persisted start track
+                    ApplicationSettingsHelper.SaveSettingsValue(ApplicationSettingsConstants.TrackId, CurrentTrack.InternalID);
+
+                    // Start task
+                    StartBackgroundAudioTask();
+                }
+                else
+                {
+                    // Switch to the selected track
+                    MessageService.SendMessageToBackground(new UpdatePlaylistMessage());
+                    MessageService.SendMessageToBackground(new TrackChangedMessage(CurrentTrack.InternalID));
+                }
+
+                if (MediaPlayerState.Paused == CurrentPlayer.CurrentState)
+                {
+                    CurrentPlayer.Play();
+                }
+
+            });
+
+            SetNavigationButtonsState();
+        }
+
+        public void PlayPause()
+        {
+            Debug.WriteLine("Play button pressed from App");
+            if (IsMyBackgroundTaskRunning)
+            {
+                if (MediaPlayerState.Playing == CurrentPlayer.CurrentState)
+                {
+                    CurrentPlayer.Pause();
+                }
+                else if (MediaPlayerState.Paused == CurrentPlayer.CurrentState)
+                {
+                    CurrentPlayer.Play();
+                }
+                else if (MediaPlayerState.Closed == CurrentPlayer.CurrentState)
+                {
+                    StartBackgroundAudioTask();
+                }
             }
             else
             {
-                try
-                {
-                    BackgroundMediaPlayer.Current.SetUriSource(new Uri(this.CurrentTrack.MP3URL));
-                }
-                catch (FileNotFoundException)
-                {
-
-                }
+                StartBackgroundAudioTask();
             }
-            Play();
-        }
-
-        public void Play()
-        {
-            CurrentTrack.UpdateTimesPlayed();
-            CurrentTrack.Playing = true;
-            BackgroundMediaPlayer.Current.Play();
+          
             PlayButtonIsEnabled = true;
             SetNavigationButtonsState();
             PlayButtonVisibility = Visibility.Collapsed;
             StopButtonVisibility = Visibility.Visible;
-            DisplayUpdater();
             RefreshBindings();
         }
 
-        public void Pause()
-        {
-            BackgroundMediaPlayer.Current.Pause();
-            PlayButtonVisibility = Visibility.Visible;
-            StopButtonVisibility = Visibility.Collapsed;
-            DisplayUpdater();
-            RefreshBindings();
-        }
+        //public void Pause()
+        //{
+        //    BackgroundMediaPlayer.Current.Pause();
+        //    PlayButtonVisibility = Visibility.Visible;
+        //    StopButtonVisibility = Visibility.Collapsed;
+        //    DisplayUpdater();
+        //    RefreshBindings();
+        //}
 
         public void Stop()
         {
+            CurrentPlayer.Pause();
             CurrentTrack.Playing = false;
             BackgroundMediaPlayer.Current.Pause();
             PlayButtonVisibility = Visibility.Collapsed;
             StopButtonVisibility = Visibility.Visible;
             PlayButtonIsEnabled = false;
-            DisplayUpdater();
             RefreshBindings();
         }
 
-        public async Task Next()
+        public void Next()
         {
-            int CurrentTrackIndex = GetIndexOfCurrentTrack();
+            MessageService.SendMessageToBackground(new SkipNextMessage());
 
-            if (CurrentTrackIndex == TrackQueue.Length - 1)
-            {
-                return;
-            }
-
-            if (CurrentTrack != null)
-            {
-                CurrentTrack.Playing = false;
-            }
-
-            CurrentTrack = TrackQueue[CurrentTrackIndex + 1];
-
-            SetNavigationButtonsState();
-            DisplayUpdater();
+            NextButtonIsEnabled = false;
             RefreshBindings();
-
-            if (this.CurrentTrack.Downloaded)
-            {
-                BackgroundMediaPlayer.Current.SetStreamSource(await(await this.CurrentTrack.GetDownloadedFile()).OpenReadAsync());
-            }
-            else
-            {
-                BackgroundMediaPlayer.Current.SetUriSource(new Uri(this.CurrentTrack.MP3URL));
-            }
-
-            Play();
         }
 
-        public async Task Previous()
+        public void Previous()
         {
-            int CurrentTrackIndex = GetIndexOfCurrentTrack();
+            MessageService.SendMessageToBackground(new SkipPreviousMessage());
 
-            if (CurrentTrackIndex == 0)
-            {
-                return;
-            }
-
-            if (CurrentTrack != null)
-            {
-                CurrentTrack.Playing = false;
-            }
-
-            CurrentTrack = TrackQueue[CurrentTrackIndex - 1];
-
-            SetNavigationButtonsState();
-            DisplayUpdater();
+            PreviousButtonIsEnabled = false;
             RefreshBindings();
-
-            if (this.CurrentTrack.Downloaded)
-            {
-                BackgroundMediaPlayer.Current.SetStreamSource(await(await this.CurrentTrack.GetDownloadedFile()).OpenReadAsync());
-            }
-            else
-            {
-                BackgroundMediaPlayer.Current.SetUriSource(new Uri(this.CurrentTrack.MP3URL));
-            }
-
-            Play();
         }
 
         private void SetNavigationButtonsState()
@@ -276,38 +207,12 @@ namespace SlamLogic.ViewModels
 
         private int GetIndexOfCurrentTrack()
         {
-            return TrackQueue.ToList().IndexOf(TrackQueue.Where(t => t.MP3URL == CurrentTrack.MP3URL).First());
-        }
-
-        private void DisplayUpdater()
-        {
-            SystemMediaTransportControlsDisplayUpdater updater = systemMediaControls.DisplayUpdater;
-            updater.Type = MediaPlaybackType.Music;
-            updater.MusicProperties.Title = CurrentTrack.ShowName;
-            updater.MusicProperties.Artist = CurrentTrack.MixSubTitle;
-
-            updater.Update();
-        }
-
-        public void BackgroundMediaPlayer_CurrentStateChanged(MediaPlayer sender, object args)
-        {
-            switch (BackgroundMediaPlayer.Current.CurrentState)
+            if (CurrentTrack == null)
             {
-                case MediaPlayerState.Playing:
-                    systemMediaControls.PlaybackStatus = MediaPlaybackStatus.Playing;
-                    break;
-                case MediaPlayerState.Paused:
-                    systemMediaControls.PlaybackStatus = MediaPlaybackStatus.Paused;
-                    break;
-                case MediaPlayerState.Stopped:
-                    systemMediaControls.PlaybackStatus = MediaPlaybackStatus.Stopped;
-                    break;
-                case MediaPlayerState.Closed:
-                    systemMediaControls.PlaybackStatus = MediaPlaybackStatus.Closed;
-                    break;
-                default:
-                    break;
+                return 0;
             }
+
+            return TrackQueue.ToList().FindIndex(m => m.InternalID == CurrentTrack.InternalID);
         }
     }
 }

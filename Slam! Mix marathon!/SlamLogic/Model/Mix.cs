@@ -1,4 +1,5 @@
 ﻿using BaseLogic.DataHandler;
+using SlamLogic.BackgroundAudioTaskSharing.Messages;
 using SlamLogic.DataHandlers;
 using SlamLogic.ViewModels;
 using SQLite.Net.Attributes;
@@ -50,6 +51,7 @@ namespace SlamLogic.Model
             {
                 _Rating = value;
                 NotifyPropertyChanged();
+                NotifyPropertyChanged("Stars");
             }
         }
 
@@ -70,6 +72,20 @@ namespace SlamLogic.Model
             }
         }
 
+        [Ignore]
+        public Visibility[] Stars
+        {
+            get
+            {
+                List<Visibility> l = new List<Visibility>();
+                for (int i = 0; i < 5; i++)
+                {
+                    l.Add(Rating >= i ? Visibility.Visible : Visibility.Collapsed);
+                }
+
+                return l.ToArray();
+            }
+        }
 
 
         public DateTime TimeInserted { get; set; }
@@ -261,7 +277,7 @@ namespace SlamLogic.Model
                     fileSize = (int)MaxLenght / 1024 / 1024;
                     NotifyPropertyChanged("FileSizeText");
                 }
-                catch (Exception e)
+                catch (Exception)
                 {
                     Downloaded = false;
                 }
@@ -275,6 +291,7 @@ namespace SlamLogic.Model
                     TimeDownloaded = DateTime.Now;
                     NotifyPropertyChanged("DownloadedOn");
                     MixDataHandler.instance.UpdateMix(this);
+                    MediaPlayerViewModel.instance.CheckIfBackgroundTaskIsRunning();
                 }
 
                 return Downloaded;
@@ -331,13 +348,16 @@ namespace SlamLogic.Model
                 MP3FileName = null;
                 Downloaded = false;
                 MixDataHandler.instance.UpdateMix(this);
+                MediaPlayerViewModel.instance.CheckIfBackgroundTaskIsRunning();
             }
         }
 
         public void UpdateTimesPlayed()
         {
-            TimesPlayed++;
-            MixDataHandler.instance.UpdateMix(this);
+            Mix m = MixDataHandler.instance.GetMixByID(InternalID);
+            m.TimesPlayed++;
+            MixDataHandler.instance.UpdateMix(m);
+            TimesPlayed = m.TimesPlayed;
             NotifyPropertyChanged("TimesPlayedText");
         }
     }

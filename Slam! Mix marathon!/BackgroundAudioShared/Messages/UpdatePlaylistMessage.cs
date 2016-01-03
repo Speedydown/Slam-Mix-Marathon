@@ -21,12 +21,9 @@ namespace BackgroundAudioShared.Messages
     [DataContract]
     public class UpdatePlaylistMessage
     {
-        public UpdatePlaylistMessage(List<SongModel> songs)
+        public UpdatePlaylistMessage()
         {
-            this.Songs = songs;
+           
         }
-
-        [DataMember]
-        public List<SongModel> Songs;
     }
 }

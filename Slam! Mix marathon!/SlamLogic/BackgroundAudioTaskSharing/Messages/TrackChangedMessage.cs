@@ -16,7 +16,7 @@ using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BackgroundAudioShared.Messages
+namespace SlamLogic.BackgroundAudioTaskSharing.Messages
 {
     [DataContract]
     public class TrackChangedMessage
