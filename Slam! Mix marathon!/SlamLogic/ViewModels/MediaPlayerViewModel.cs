@@ -63,9 +63,23 @@ namespace SlamLogic.ViewModels
             // that access BackgroundMediaPlayer events
             Application.Current.Suspending += ForegroundApp_Suspending;
             Application.Current.Resuming += ForegroundApp_Resuming;
+            Application.Current.UnhandledException += Current_UnhandledException;
             ApplicationSettingsHelper.SaveSettingsValue(ApplicationSettingsConstants.AppState, AppState.Active.ToString());
+
+            //backgroundAudioTaskStarted.Set();
+            RefreshBindings();
+            Task.Run(async () =>
+            {
+                await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+                {
+                    UpdateTimer = new DispatcherTimer();
+                    UpdateTimer.Interval = TimeSpan.FromMilliseconds(500);
+                    UpdateTimer.Tick += delegate { UpdateTimerPosition(); };
+                    UpdateTimer.Start();
+                });
+            });
         }
-   
+
         private void UpdateTimerPosition()
         {
                 Position = BackgroundMediaPlayer.Current.Position.ToString(@"mm\:ss");

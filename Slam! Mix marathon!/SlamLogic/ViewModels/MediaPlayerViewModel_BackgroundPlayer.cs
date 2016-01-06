@@ -67,6 +67,18 @@ namespace SlamLogic.ViewModels
             RefreshBindings();
         }
 
+        private void Current_UnhandledException(object sender, UnhandledExceptionEventArgs e)
+        {
+            BackgroundMediaPlayer.Shutdown();
+            _isMyBackgroundTaskRunning = false;
+
+            // save state
+            ApplicationSettingsHelper.SaveSettingsValue(ApplicationSettingsConstants.TrackId, 0);
+            ApplicationSettingsHelper.SaveSettingsValue(ApplicationSettingsConstants.Position, BackgroundMediaPlayer.Current.Position.ToString());
+            ApplicationSettingsHelper.SaveSettingsValue(ApplicationSettingsConstants.BackgroundTaskState, BackgroundTaskState.Canceled.ToString());
+            ApplicationSettingsHelper.SaveSettingsValue(ApplicationSettingsConstants.AppState, Enum.GetName(typeof(AppState), AppState.Unknown));
+        }
+
         /// <summary>
         /// Send message to Background process that app is to be suspended
         /// Stop clock and slider when suspending
@@ -89,6 +101,7 @@ namespace SlamLogic.ViewModels
 
             // Persist that the foreground app is suspended
             ApplicationSettingsHelper.SaveSettingsValue(ApplicationSettingsConstants.AppState, AppState.Suspended.ToString());
+            ApplicationSettingsHelper.SaveSettingsValue(ApplicationSettingsConstants.BackgroundTaskState, BackgroundTaskState.Running.ToString());
 
             deferral.Complete();
         }
@@ -155,18 +168,18 @@ namespace SlamLogic.ViewModels
                 // StartBackgroundAudioTask is waiting for this signal to know when the task is up and running
                 // and ready to receive messages
                 Debug.WriteLine("BackgroundAudioTask started");
-                backgroundAudioTaskStarted.Set();
-                RefreshBindings();
-                await Task.Run(async () =>
-                {
-                    await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
-                    {
-                        UpdateTimer = new DispatcherTimer();
-                        UpdateTimer.Interval = TimeSpan.FromMilliseconds(500);
-                        UpdateTimer.Tick += delegate { UpdateTimerPosition(); };
-                        UpdateTimer.Start();
-                    });
-                });
+                //backgroundAudioTaskStarted.Set();
+                //RefreshBindings();
+                //await Task.Run(async () =>
+                //{
+                //    await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+                //    {
+                //        UpdateTimer = new DispatcherTimer();
+                //        UpdateTimer.Interval = TimeSpan.FromMilliseconds(500);
+                //        UpdateTimer.Tick += delegate { UpdateTimerPosition(); };
+                //        UpdateTimer.Start();
+                //    });
+                //});
                 return;
             }
         }
@@ -257,15 +270,16 @@ namespace SlamLogic.ViewModels
             {
                 bool result = backgroundAudioTaskStarted.WaitOne(10000);
                 //Send message to initiate playback
-                if (result == true)
-                {
-                    MessageService.SendMessageToBackground(new UpdatePlaylistMessage());
-                    MessageService.SendMessageToBackground(new StartPlaybackMessage((CurrentTrack != null ? CurrentTrack.InternalID : 0)));
-                }
-                else
-                {
-                    throw new Exception("Background Audio Task didn't start in expected time");
-                }
+                //if (result == true)
+                //{
+                MessageService.SendMessageToBackground(new UpdatePlaylistMessage());
+                MessageService.SendMessageToBackground(new StartPlaybackMessage((CurrentTrack != null ? CurrentTrack.InternalID : 0)));
+                //}
+                //else
+                //{
+                //    //Asume the mediaplayer is allready running.
+                //    //throw new Exception("Background Audio Task didn't start in expected time");
+                //}
             });
             startResult.Completed = new AsyncActionCompletedHandler(BackgroundTaskInitializationCompleted);
         }
@@ -298,7 +312,7 @@ namespace SlamLogic.ViewModels
         /// Gets the information about background task is running or not by reading the setting saved by background task.
         /// This is used to determine when to start the task and also when to avoid sending messages.
         /// </summary>
-        private bool IsMyBackgroundTaskRunning
+        public bool IsMyBackgroundTaskRunning
         {
             get
             {

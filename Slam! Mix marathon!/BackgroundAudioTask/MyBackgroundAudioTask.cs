@@ -55,6 +55,7 @@ namespace BackgroundAudioTask
         private SystemMediaTransportControls smtc;
         private Mix CurrentMix = null;
         private Mix[] Playlist = null;
+        private Settings CurrentSettings = null;
         private BackgroundTaskDeferral deferral; // Used to keep task alive
         private AppState foregroundAppState = AppState.Unknown;
         private ManualResetEvent backgroundTaskStarted = new ManualResetEvent(false);
@@ -328,6 +329,12 @@ namespace BackgroundAudioTask
         {
             int CurrentIndex = Playlist.ToList().FindIndex(m => m.InternalID == CurrentMix.InternalID);
 
+            if (CurrentIndex == -1)
+            {
+                BackgroundMediaPlayer.Current.Pause();
+                return;
+            }
+
             if (CurrentIndex == 0)
             {
                 CurrentIndex = Playlist.Count() - 1;
@@ -350,6 +357,12 @@ namespace BackgroundAudioTask
         private async Task SkipToNext()
         {
             int CurrentIndex = Playlist.ToList().FindIndex(m => m.InternalID == CurrentMix.InternalID);
+
+            if (CurrentIndex == -1)
+            {
+                BackgroundMediaPlayer.Current.Pause();
+                return;
+            }
 
             if (CurrentIndex == Playlist.Count() - 1)
             {
@@ -383,6 +396,12 @@ namespace BackgroundAudioTask
             {
                 smtc.PlaybackStatus = MediaPlaybackStatus.Closed;
             }
+        }
+
+        private async Task UpdateOptions()
+        {
+            CurrentSettings = SettingsDataHandler.instance.GetSettings();
+            await CreatePlaybackList();
         }
 
         /// <summary>
@@ -445,7 +464,13 @@ namespace BackgroundAudioTask
             UpdatePlaylistMessage updatePlaylistMessage;
             if (MessageService.TryParseMessage(e.Data, out updatePlaylistMessage))
             {
-                await CreatePlaybackList();
+                await UpdateOptions();
+            }
+
+            UpdateOptionsMessage UpdateOptionsMessage;
+            if (MessageService.TryParseMessage(e.Data, out UpdateOptionsMessage))
+            {
+                await UpdateOptions();
             }
 
             UpdateUVCOnNewTrack(CurrentMix);

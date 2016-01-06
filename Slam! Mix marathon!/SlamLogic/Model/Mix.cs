@@ -1,15 +1,11 @@
 ﻿using BaseLogic.DataHandler;
-using SlamLogic.BackgroundAudioTaskSharing.Messages;
 using SlamLogic.DataHandlers;
 using SlamLogic.ViewModels;
 using SQLite.Net.Attributes;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.IO.IsolatedStorage;
-using System.Linq;
 using System.Net;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Windows.Storage;
@@ -21,10 +17,12 @@ namespace SlamLogic.Model
     {
         public string ShowName { get; set; }
         public string Date { get; set; }
+        public DateTime RealDate { get; set; }
         public string StartTime { get; set; }
         public bool Old { get; set; }
         public int fileSize { get; private set; }
 
+        [Unique]
         public string MP3URL { get; set; }
         public string MP3FileName { get; set; }
         private bool _Downloaded = false;
