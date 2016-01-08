@@ -45,7 +45,7 @@ namespace SlamLogic.DataHandlers
 
             if (MediaPlayerViewModel.instance.IsMyBackgroundTaskRunning)
             {
-                MessageService.SendMessageToBackground(new UpdateOptionsMessage());
+                MessageService.SendMessageToBackground(new UpdatePlaylistMessage());
             }
         }
     }

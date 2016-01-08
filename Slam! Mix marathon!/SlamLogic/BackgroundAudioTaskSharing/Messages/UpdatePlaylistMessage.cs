@@ -25,5 +25,13 @@ namespace SlamLogic.BackgroundAudioTaskSharing.Messages
         {
            
         }
+
+        public UpdatePlaylistMessage(bool SendUpdateMessage)
+        {
+            this.SendUpdateMessage = SendUpdateMessage;
+        }
+
+        [DataMember]
+        public bool SendUpdateMessage;
     }
 }

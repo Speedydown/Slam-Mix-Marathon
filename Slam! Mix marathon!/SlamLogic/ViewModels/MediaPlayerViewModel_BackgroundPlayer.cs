@@ -168,18 +168,41 @@ namespace SlamLogic.ViewModels
                 // StartBackgroundAudioTask is waiting for this signal to know when the task is up and running
                 // and ready to receive messages
                 Debug.WriteLine("BackgroundAudioTask started");
-                //backgroundAudioTaskStarted.Set();
-                //RefreshBindings();
-                //await Task.Run(async () =>
-                //{
-                //    await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
-                //    {
-                //        UpdateTimer = new DispatcherTimer();
-                //        UpdateTimer.Interval = TimeSpan.FromMilliseconds(500);
-                //        UpdateTimer.Tick += delegate { UpdateTimerPosition(); };
-                //        UpdateTimer.Start();
-                //    });
-                //});
+                return;
+            }
+
+            UpdateMediaPlayerInfoMessage updateMediaPlayerInfoMessage;
+            if (MessageService.TryParseMessage(e.Data, out updateMediaPlayerInfoMessage))
+            {
+                // StartBackgroundAudioTask is waiting for this signal to know when the task is up and running
+                // and ready to receive messages
+                // When foreground app is active change track based on background message
+                await Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+                {
+                    if (updateMediaPlayerInfoMessage.InternalMixID != 0)
+                    {
+                        CurrentTrack = TrackQueue.Single(s => s.InternalID == updateMediaPlayerInfoMessage.InternalMixID);
+
+                        // Ensure track buttons are re-enabled since they are disabled when pressed
+                        foreach (Mix m in TrackQueue.Where(m => m.Playing))
+                        {
+                            m.Playing = false;
+                        }
+
+                        CurrentTrack.Playing = true;
+
+                        NextButtonIsEnabled = true;
+                        PreviousButtonIsEnabled = true;
+                        RefreshBindings();
+                    }
+                    //else if (CurrentTrack != null)
+                    //{
+                    //    Stop();
+                    //    RefreshBindings();
+                    //}
+                });
+
+                Debug.WriteLine("Updating MediaInfo");
                 return;
             }
         }
@@ -196,9 +219,12 @@ namespace SlamLogic.ViewModels
 
             if (state == MediaPlayerState.Playing)
             {
-                CurrentTrack.Playing = true;
-                PlayButtonVisibility = Visibility.Collapsed;
-                StopButtonVisibility = Visibility.Visible;
+                if (CurrentTrack != null)
+                {
+                    CurrentTrack.Playing = true;
+                    PlayButtonVisibility = Visibility.Collapsed;
+                    StopButtonVisibility = Visibility.Visible;
+                }
             }
             else
             {

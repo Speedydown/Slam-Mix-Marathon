@@ -70,7 +70,7 @@ namespace SlamLogic.BackgroundAudioTaskSharing.Messages
                 // Validate type
                 if ((string)messageTypeValue != typeof(T).FullName)
                 {
-                    Debug.WriteLine("Message type was {0} but expected type was {1}", (string)messageTypeValue, typeof(T).FullName);
+                    //Debug.WriteLine("Message type was {0} but expected type was {1}", (string)messageTypeValue, typeof(T).FullName);
                     return false;
                 }
 

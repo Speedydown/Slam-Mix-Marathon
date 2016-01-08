@@ -464,13 +464,25 @@ namespace BackgroundAudioTask
             UpdatePlaylistMessage updatePlaylistMessage;
             if (MessageService.TryParseMessage(e.Data, out updatePlaylistMessage))
             {
-                await UpdateOptions();
-            }
+                await Task.Delay(500);
 
-            UpdateOptionsMessage UpdateOptionsMessage;
-            if (MessageService.TryParseMessage(e.Data, out UpdateOptionsMessage))
-            {
-                await UpdateOptions();
+                while (true)
+                {
+                    try
+                    {
+                        await UpdateOptions();
+                        break;
+                    }
+                    catch
+                    {
+
+                    }
+                }
+
+                if (updatePlaylistMessage.SendUpdateMessage)
+                {
+                    MessageService.SendMessageToForeground(new UpdateMediaPlayerInfoMessage(CurrentMix == null ? 0 : CurrentMix.InternalID));
+                }
             }
 
             UpdateUVCOnNewTrack(CurrentMix);

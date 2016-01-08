@@ -118,7 +118,7 @@
     <Compile Include="BackgroundAudioTaskSharing\ApplicationSettingsHelper.cs" />
     <Compile Include="BackgroundAudioTaskSharing\AppState.cs" />
     <Compile Include="BackgroundAudioTaskSharing\BackgroundTaskState.cs" />
-    <Compile Include="BackgroundAudioTaskSharing\Messages\UpdateOptionsMessage.cs" />
+    <Compile Include="BackgroundAudioTaskSharing\Messages\UpdateMediaPlayerInfoMessage.cs" />
     <Compile Include="DataHandlers\MixDataHandler.cs" />
     <Compile Include="BackgroundAudioTaskSharing\EnumHelper.cs" />
     <Compile Include="BackgroundAudioTaskSharing\JsonHelper.cs" />
