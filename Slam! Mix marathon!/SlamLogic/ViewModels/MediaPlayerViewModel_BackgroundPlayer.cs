@@ -177,10 +177,20 @@ namespace SlamLogic.ViewModels
                 // StartBackgroundAudioTask is waiting for this signal to know when the task is up and running
                 // and ready to receive messages
                 // When foreground app is active change track based on background message
-                await Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+                await Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, async () =>
                 {
+                    if (MainpageViewModel.instance.GetMixesTask != null && MainpageViewModel.instance.GetMixesTask.IsCompleted == false)
+                    {
+                        await MainpageViewModel.instance.GetMixesTask;
+                    }
+
                     if (updateMediaPlayerInfoMessage.InternalMixID != 0)
                     {
+                        if (TrackQueue == null)
+                        {
+                            TrackQueue = MainpageViewModel.instance.Mixes;
+                        }
+
                         CurrentTrack = TrackQueue.Single(s => s.InternalID == updateMediaPlayerInfoMessage.InternalMixID);
 
                         // Ensure track buttons are re-enabled since they are disabled when pressed
@@ -195,11 +205,6 @@ namespace SlamLogic.ViewModels
                         PreviousButtonIsEnabled = true;
                         RefreshBindings();
                     }
-                    //else if (CurrentTrack != null)
-                    //{
-                    //    Stop();
-                    //    RefreshBindings();
-                    //}
                 });
 
                 Debug.WriteLine("Updating MediaInfo");
@@ -217,23 +222,24 @@ namespace SlamLogic.ViewModels
                 return;
             }
 
-            if (state == MediaPlayerState.Playing)
+            if (CurrentTrack != null)
             {
-                if (CurrentTrack != null)
+                if (state == MediaPlayerState.Playing)
                 {
                     CurrentTrack.Playing = true;
                     PlayButtonVisibility = Visibility.Collapsed;
                     StopButtonVisibility = Visibility.Visible;
                 }
-            }
-            else
-            {
-                CurrentTrack.Playing = false;
-                PlayButtonVisibility = Visibility.Visible;
-                StopButtonVisibility = Visibility.Collapsed;
+                else
+                {
+                    CurrentTrack.Playing = false;
+                    PlayButtonVisibility = Visibility.Visible;
+                    StopButtonVisibility = Visibility.Collapsed;
+                }
+
+                PlayButtonIsEnabled = true;
             }
 
-            PlayButtonIsEnabled = true;
             RefreshBindings();
         }
 
@@ -294,18 +300,7 @@ namespace SlamLogic.ViewModels
 
             var startResult = Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
             {
-                bool result = backgroundAudioTaskStarted.WaitOne(10000);
-                //Send message to initiate playback
-                //if (result == true)
-                //{
-                MessageService.SendMessageToBackground(new UpdatePlaylistMessage());
-                MessageService.SendMessageToBackground(new StartPlaybackMessage((CurrentTrack != null ? CurrentTrack.InternalID : 0)));
-                //}
-                //else
-                //{
-                //    //Asume the mediaplayer is allready running.
-                //    //throw new Exception("Background Audio Task didn't start in expected time");
-                //}
+                bool result = backgroundAudioTaskStarted.WaitOne(1);
             });
             startResult.Completed = new AsyncActionCompletedHandler(BackgroundTaskInitializationCompleted);
         }
@@ -322,17 +317,6 @@ namespace SlamLogic.ViewModels
             }
         }
         #endregion
-
-        //protected override void OnNavigatedFrom(NavigationEventArgs e)
-        //{
-        //    if (_isMyBackgroundTaskRunning)
-        //    {
-        //        RemoveMediaPlayerEventHandlers();
-        //        ApplicationSettingsHelper.SaveSettingsValue(ApplicationSettingsConstants.BackgroundTaskState, BackgroundTaskState.Running.ToString());
-        //    }
-
-        //    base.OnNavigatedFrom(e);
-        //}
 
         /// <summary>
         /// Gets the information about background task is running or not by reading the setting saved by background task.

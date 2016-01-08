@@ -9,6 +9,7 @@
 //
 //*********************************************************
 
+using SlamLogic.DataHandlers;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -42,18 +43,21 @@ namespace SlamLogic.BackgroundAudioTaskSharing.Messages
 
         public static void SendMessageToForeground<T>(T message)
         {
-            var payload = new ValueSet();
-            payload.Add(MessageService.MessageType, typeof(T).FullName);
-            payload.Add(MessageService.MessageBody, JsonHelper.ToJson(message));
-            BackgroundMediaPlayer.SendMessageToForeground(payload);
+                var payload = new ValueSet();
+                payload.Add(MessageService.MessageType, typeof(T).FullName);
+                payload.Add(MessageService.MessageBody, JsonHelper.ToJson(message));
+                BackgroundMediaPlayer.SendMessageToForeground(payload);
         }
-    
+
         public static void SendMessageToBackground<T>(T message)
         {
-            var payload = new ValueSet();
-            payload.Add(MessageService.MessageType, typeof(T).FullName);
-            payload.Add(MessageService.MessageBody, JsonHelper.ToJson(message));
-            BackgroundMediaPlayer.SendMessageToBackground(payload);
+            lock (MixDataHandler.DatabaseLocker)
+            {
+                var payload = new ValueSet();
+                payload.Add(MessageService.MessageType, typeof(T).FullName);
+                payload.Add(MessageService.MessageBody, JsonHelper.ToJson(message));
+                BackgroundMediaPlayer.SendMessageToBackground(payload);
+            }
         }
 
         public static bool TryParseMessage<T>(ValueSet valueSet, out T message)

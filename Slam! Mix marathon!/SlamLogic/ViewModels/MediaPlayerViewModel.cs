@@ -67,22 +67,27 @@ namespace SlamLogic.ViewModels
             Application.Current.UnhandledException += Current_UnhandledException;
             ApplicationSettingsHelper.SaveSettingsValue(ApplicationSettingsConstants.AppState, AppState.Active.ToString());
 
-            StartBackgroundAudioTask();
 
-            //backgroundAudioTaskStarted.Set();
-            RefreshBindings();
             Task.Run(async () =>
             {
+                await Task.Delay(1000);
+
+                StartBackgroundAudioTask();
+
+                backgroundAudioTaskStarted.Set();
+                RefreshBindings();
+
                 await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
                 {
-                    UpdateTimer = new DispatcherTimer();
-                    UpdateTimer.Interval = TimeSpan.FromMilliseconds(500);
-                    UpdateTimer.Tick += delegate { UpdateTimerPosition(); };
-                    UpdateTimer.Start();
+                        UpdateTimer = new DispatcherTimer();
+                        UpdateTimer.Interval = TimeSpan.FromMilliseconds(500);
+                        UpdateTimer.Tick += delegate { UpdateTimerPosition(); };
+                        UpdateTimer.Start();
                 });
-            });
 
-            MessageService.SendMessageToBackground(new UpdatePlaylistMessage(true));
+                MessageService.SendMessageToBackground(new UpdatePlaylistMessage(true));
+
+            });
         }
 
         private void UpdateTimerPosition()
@@ -143,7 +148,7 @@ namespace SlamLogic.ViewModels
                 //else
                 //{
                 // Switch to the selected track
-               // MessageService.SendMessageToBackground(new UpdatePlaylistMessage());
+                // MessageService.SendMessageToBackground(new UpdatePlaylistMessage());
                 MessageService.SendMessageToBackground(new TrackChangedMessage(CurrentTrack.InternalID));
                 //}
 

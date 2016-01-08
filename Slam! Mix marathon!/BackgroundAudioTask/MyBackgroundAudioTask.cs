@@ -455,6 +455,11 @@ namespace BackgroundAudioTask
             TrackChangedMessage trackChangedMessage;
             if (MessageService.TryParseMessage(e.Data, out trackChangedMessage))
             {
+                if (Playlist == null)
+                {
+                    await UpdateOptions();
+                }
+
                 CurrentMix = Playlist.Single(m => m.InternalID == trackChangedMessage.InternalMixID);
                 Debug.WriteLine("Skipping to track " + trackChangedMessage.InternalMixID);
                 smtc.PlaybackStatus = MediaPlaybackStatus.Changing;
@@ -464,24 +469,29 @@ namespace BackgroundAudioTask
             UpdatePlaylistMessage updatePlaylistMessage;
             if (MessageService.TryParseMessage(e.Data, out updatePlaylistMessage))
             {
-                await Task.Delay(500);
-
-                while (true)
+                try
                 {
-                    try
+                    while (true)
                     {
-                        await UpdateOptions();
-                        break;
-                    }
-                    catch
-                    {
+                        try
+                        {
+                            await UpdateOptions();
+                            break;
+                        }
+                        catch
+                        {
 
+                        }
+                    }
+
+                    if (updatePlaylistMessage.SendUpdateMessage)
+                    {
+                        MessageService.SendMessageToForeground(new UpdateMediaPlayerInfoMessage(CurrentMix == null ? 0 : CurrentMix.InternalID));
                     }
                 }
-
-                if (updatePlaylistMessage.SendUpdateMessage)
+                catch
                 {
-                    MessageService.SendMessageToForeground(new UpdateMediaPlayerInfoMessage(CurrentMix == null ? 0 : CurrentMix.InternalID));
+
                 }
             }
 

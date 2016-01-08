@@ -15,7 +15,8 @@ namespace SlamLogic.DataHandlers
 {
     public class MixDataHandler : DataHandler
     {
-        private static readonly object Locker = new object();
+        private static readonly object MixListLocker = new object();
+        internal static readonly object DatabaseLocker = new object();
         public static readonly MixDataHandler instance = new MixDataHandler();
         private const string MixTapeURL = "http://www.slam.nl/terugluisteren/";
         private const string DebugString = "[Mix] {0} mix {1} on {2} {3}";
@@ -41,8 +42,11 @@ namespace SlamLogic.DataHandlers
 
         private MixDataHandler() : base()
         {
-            CurrentSettings = SettingsDataHandler.instance.GetSettings();
-            CreateItemTable<Mix>();
+            lock(DatabaseLocker)
+            {
+                CurrentSettings = SettingsDataHandler.instance.GetSettings();
+                CreateItemTable<Mix>();
+            }
         }
 
         public Mix GetMixByID(int ID)
@@ -79,11 +83,15 @@ namespace SlamLogic.DataHandlers
 
             //System.Diagnostics.Debug.WriteLine(string.Format("[MIX] There are {0} mixes in the database", CountTable<Mix>()));
             Logger.Set("GetMixes");
-            return GetItems<Mix>()
+
+            lock (DatabaseLocker)
+            {
+                return GetItems<Mix>()
                 .OrderByDescending(m => m.RealDate)
                 .ThenByDescending(m => m.StartTime)
                 .ThenByDescending(m => m.StartTime)
                 .ToArray();
+            }
         }
 
         private async Task GetMixesFromInternet()
@@ -91,7 +99,11 @@ namespace SlamLogic.DataHandlers
             List<Mix> UpdatedMixes = new List<Mix>();
             List<Task> URLTasks = new List<Task>();
             string Source = await GetMixPageSource();
-            Source = Source.Substring(HTMLParserUtil.GetPositionOfStringInHTMLSource("<div class=\"carousel-inner\">", Source, false));
+
+            if (Source.Contains("<div class=\"carousel-inner\">"))
+            {
+                Source = Source.Substring(HTMLParserUtil.GetPositionOfStringInHTMLSource("<div class=\"carousel-inner\">", Source, false));
+            }
 
             while (true)
             {
@@ -212,7 +224,7 @@ namespace SlamLogic.DataHandlers
                         {
                             MatchingMix.Old = false;
 
-                            lock (Locker)
+                            lock (MixListLocker)
                             {
                                 UpdatedMixes.Add(MatchingMix);
                                 //System.Diagnostics.Debug.WriteLine(string.Format(DebugString, "Skipping", ShowName, Date, StartTime));
@@ -223,7 +235,7 @@ namespace SlamLogic.DataHandlers
                     {
                         Mix CurrentMix = new Mix() { StartTime = StartTime, Date = Date, RealDate = RealDate, ShowName = ShowName, MP3URL = MP3URL, TimeInserted = DateTime.Now };
 
-                        lock (Locker)
+                        lock (MixListLocker)
                         {
                             UpdatedMixes.Add(CurrentMix);
                             //System.Diagnostics.Debug.WriteLine(String.Format(DebugString, "Added", CurrentMix.ShowName, CurrentMix.Date, CurrentMix.StartTime));
@@ -239,22 +251,35 @@ namespace SlamLogic.DataHandlers
 
         private void MarkMixesAsOld()
         {
-            Mix[] Mixes = GetItems<Mix>().Where(m => !m.Downloaded && DateTime.Now.Subtract(m.RealDate).Days > 5).ToArray();
+            Mix[] Mixes = null;
+
+            lock (DatabaseLocker)
+            {
+                Mixes = GetItems<Mix>().Where(m => !m.Downloaded && DateTime.Now.Subtract(m.RealDate).Days > 5).ToArray();
+            }
 
             foreach (Mix m in Mixes)
             {
                 m.Old = true;
             }
 
-            SaveItems(Mixes);
+            lock (DatabaseLocker)
+            {
+                SaveItems(Mixes);
+            }
         }
 
         private void ClearOldMixes()
         {
-            Mix[] Mixes = GetItems<Mix>().Where(m => m.Old).ToArray();
+            Mix[] Mixes = null;
 
-            DeleteItems(Mixes);
-            System.Diagnostics.Debug.WriteLine(string.Format("[Mix] Deleted {0} old mixes.", Mixes.Count()));
+            lock (DatabaseLocker)
+            {
+                Mixes = GetItems<Mix>().Where(m => m.Old).ToArray();
+
+                DeleteItems(Mixes);
+                System.Diagnostics.Debug.WriteLine(string.Format("[Mix] Deleted {0} old mixes.", Mixes.Count()));
+            }
         }
 
         private async Task<string> GetMixPageSource()
