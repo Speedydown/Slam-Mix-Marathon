@@ -42,11 +42,8 @@ namespace SlamLogic.DataHandlers
 
         private MixDataHandler() : base()
         {
-            lock(DatabaseLocker)
-            {
-                CurrentSettings = SettingsDataHandler.instance.GetSettings();
-                CreateItemTable<Mix>();
-            }
+            CurrentSettings = SettingsDataHandler.instance.GetSettings();
+            CreateItemTable<Mix>();
         }
 
         public Mix GetMixByID(int ID)
@@ -61,17 +58,19 @@ namespace SlamLogic.DataHandlers
 
         public async Task<Mix[]> GetMixes(bool Offline)
         {
-            //Check if app is in offline mode
-            if (CurrentSettings.OfflineMode)
+            lock (DatabaseLocker)
             {
-                Offline = true;
+                //Check if app is in offline mode
+                if (CurrentSettings.OfflineMode)
+                {
+                    Offline = true;
+                }
             }
 
             Logger.Set("GetMixes");
-            if (!Offline || DateTime.Now.Subtract(CurrentSettings.LastRetrievedFromInternet).Hours > 1)
+            if (!Offline && DateTime.Now.Subtract(CurrentSettings.LastRetrievedFromInternet).Minutes > 29)
             {
                 MixDataWarning = null;
-                //System.Diagnostics.Debug.WriteLine(string.Format("[MIX] There are {0} mixes in the database", CountTable<Mix>()));
                 MarkMixesAsOld();
                 Task InternetTask = Task.Run(() => GetMixesFromInternet());
 
@@ -81,7 +80,6 @@ namespace SlamLogic.DataHandlers
                 SettingsDataHandler.instance.UpdateSettings(CurrentSettings);
             }
 
-            //System.Diagnostics.Debug.WriteLine(string.Format("[MIX] There are {0} mixes in the database", CountTable<Mix>()));
             Logger.Set("GetMixes");
 
             lock (DatabaseLocker)
@@ -89,7 +87,7 @@ namespace SlamLogic.DataHandlers
                 return GetItems<Mix>()
                 .OrderByDescending(m => m.RealDate)
                 .ThenByDescending(m => m.StartTime)
-                .ThenByDescending(m => m.StartTime)
+                .ThenByDescending(m => m.InternalID)
                 .ToArray();
             }
         }
@@ -227,7 +225,7 @@ namespace SlamLogic.DataHandlers
                             lock (MixListLocker)
                             {
                                 UpdatedMixes.Add(MatchingMix);
-                                //System.Diagnostics.Debug.WriteLine(string.Format(DebugString, "Skipping", ShowName, Date, StartTime));
+
                             }
                         }
                     }
@@ -238,7 +236,6 @@ namespace SlamLogic.DataHandlers
                         lock (MixListLocker)
                         {
                             UpdatedMixes.Add(CurrentMix);
-                            //System.Diagnostics.Debug.WriteLine(String.Format(DebugString, "Added", CurrentMix.ShowName, CurrentMix.Date, CurrentMix.StartTime));
                         }
                     }
                 }

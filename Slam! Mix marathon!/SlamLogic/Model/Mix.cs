@@ -356,7 +356,6 @@ namespace SlamLogic.Model
             m.TimesPlayed++;
             MixDataHandler.instance.UpdateMix(m);
             TimesPlayed = m.TimesPlayed;
-            NotifyPropertyChanged("TimesPlayedText");
         }
     }
 }

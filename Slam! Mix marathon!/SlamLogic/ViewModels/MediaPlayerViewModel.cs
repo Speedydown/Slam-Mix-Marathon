@@ -70,7 +70,10 @@ namespace SlamLogic.ViewModels
 
             Task.Run(async () =>
             {
-                await Task.Delay(1000);
+                if (MainpageViewModel.instance.GetMixesTask != null)
+                {
+                    await MainpageViewModel.instance.GetMixesTask;
+                }
 
                 StartBackgroundAudioTask();
 
@@ -132,31 +135,10 @@ namespace SlamLogic.ViewModels
             this.CurrentTrack = CurrentTrack;
             TrackQueue = MainpageViewModel.instance.Mixes;
             this.CurrentTrack.Playing = true;
-            CurrentTrack.UpdateTimesPlayed();
 
             await Task.Run(() =>
             {
-                //// Start the background task if it wasn't running
-                //if (!IsMyBackgroundTaskRunning)
-                //{
-                //    // First update the persisted start track
-                //    ApplicationSettingsHelper.SaveSettingsValue(ApplicationSettingsConstants.TrackId, CurrentTrack.InternalID);
-
-                //    // Start task
-                //    StartBackgroundAudioTask();
-                //}
-                //else
-                //{
-                // Switch to the selected track
-                // MessageService.SendMessageToBackground(new UpdatePlaylistMessage());
                 MessageService.SendMessageToBackground(new TrackChangedMessage(CurrentTrack.InternalID));
-                //}
-
-                //if (MediaPlayerState.Paused == CurrentPlayer.CurrentState)
-                //{
-                //    CurrentPlayer.Play();
-                //}
-
             });
 
             SetNavigationButtonsState();

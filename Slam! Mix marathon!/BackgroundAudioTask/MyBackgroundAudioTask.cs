@@ -148,7 +148,7 @@ namespace BackgroundAudioTask
                 backgroundTaskStarted.Reset();
 
                 // save state
-                ApplicationSettingsHelper.SaveSettingsValue(ApplicationSettingsConstants.TrackId,CurrentMix == null ? 0 : CurrentMix.InternalID);
+                ApplicationSettingsHelper.SaveSettingsValue(ApplicationSettingsConstants.TrackId, CurrentMix == null ? 0 : CurrentMix.InternalID);
                 ApplicationSettingsHelper.SaveSettingsValue(ApplicationSettingsConstants.Position, BackgroundMediaPlayer.Current.Position.ToString());
                 ApplicationSettingsHelper.SaveSettingsValue(ApplicationSettingsConstants.BackgroundTaskState, BackgroundTaskState.Canceled.ToString());
                 ApplicationSettingsHelper.SaveSettingsValue(ApplicationSettingsConstants.AppState, Enum.GetName(typeof(AppState), foregroundAppState));
@@ -252,7 +252,7 @@ namespace BackgroundAudioTask
                 case SystemMediaTransportControlsButton.Previous:
                     Debug.WriteLine("UVC previous button pressed");
                     await SkipToPrevious();
-                    break;     
+                    break;
             }
 
             UpdateUVCOnNewTrack(CurrentMix);
@@ -310,7 +310,7 @@ namespace BackgroundAudioTask
         {
             if (CurrentMix.Downloaded)
             {
-                StorageFile sf = await(await MixDataHandler.instance.GetFolder()).GetFileAsync(CurrentMix.MP3FileName);
+                StorageFile sf = await (await MixDataHandler.instance.GetFolder()).GetFileAsync(CurrentMix.MP3FileName);
                 BackgroundMediaPlayer.Current.Source = MediaSource.CreateFromStorageFile(sf);
             }
             else
@@ -320,6 +320,8 @@ namespace BackgroundAudioTask
 
             // Begin playing
             BackgroundMediaPlayer.Current.Play();
+
+            CurrentMix.UpdateTimesPlayed();
         }
 
         /// <summary>
@@ -455,10 +457,7 @@ namespace BackgroundAudioTask
             TrackChangedMessage trackChangedMessage;
             if (MessageService.TryParseMessage(e.Data, out trackChangedMessage))
             {
-                if (Playlist == null)
-                {
-                    await UpdateOptions();
-                }
+                await UpdateOptions();
 
                 CurrentMix = Playlist.Single(m => m.InternalID == trackChangedMessage.InternalMixID);
                 Debug.WriteLine("Skipping to track " + trackChangedMessage.InternalMixID);
@@ -505,6 +504,25 @@ namespace BackgroundAudioTask
         private async Task CreatePlaybackList()
         {
             Playlist = await MixDataHandler.instance.GetMixes(true);
+
+            switch (CurrentSettings.SortingIndex)
+            {
+                case 0:
+                    Playlist = Playlist.OrderByDescending(m => m.RealDate).ThenByDescending(m => m.StartTime).ToArray();
+                    break;
+                case 1:
+                    Playlist = Playlist.OrderBy(m => m.RealDate).ThenBy(m => m.StartTime).ToArray();
+                    break;
+                case 2:
+                    Playlist = Playlist.OrderByDescending(m => m.Rating).ThenBy(m => m.InternalID).ToArray();
+                    break;
+                case 3:
+                    Playlist = Playlist.OrderByDescending(m => m.TimesPlayed).ThenBy(m => m.InternalID).ToArray();
+                    break;
+                case 4:
+                    Playlist = Playlist.OrderByDescending(m => m.TimeDownloaded).ThenBy(m => m.InternalID).ToArray();
+                    break;
+            }
         }
         #endregion
     }

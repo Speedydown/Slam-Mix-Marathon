@@ -111,5 +111,27 @@ namespace Slam__Mix_Marathon
                 DetailContentPresenter.ContentTransitions.Clear();
             }
         }
+
+        private void SortingComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            int SelectedIndex = (sender as ComboBox).SelectedIndex;
+
+            ViewModel.OrderMixes(SelectedIndex); 
+        }
+
+        private async void Grid_Holding(object sender, HoldingRoutedEventArgs e)
+        {
+            if (e.HoldingState == Windows.UI.Input.HoldingState.Started)
+            {
+                Mix m = (sender as Grid).DataContext as Mix;
+
+                if (m.Playing)
+                {
+                    return;
+                }
+
+                await MediaPlayerViewModel.instance.PlayMix(m);
+            }
+        }
     }
 }

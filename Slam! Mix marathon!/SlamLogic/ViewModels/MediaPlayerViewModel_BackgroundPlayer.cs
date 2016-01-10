@@ -196,7 +196,10 @@ namespace SlamLogic.ViewModels
                         // Ensure track buttons are re-enabled since they are disabled when pressed
                         foreach (Mix m in TrackQueue.Where(m => m.Playing))
                         {
-                            m.Playing = false;
+                            if (m != CurrentTrack)
+                            {
+                                m.Playing = false;
+                            }
                         }
 
                         CurrentTrack.Playing = true;
@@ -224,7 +227,7 @@ namespace SlamLogic.ViewModels
 
             if (CurrentTrack != null)
             {
-                if (state == MediaPlayerState.Playing)
+                if (state == MediaPlayerState.Playing || state == MediaPlayerState.Opening)
                 {
                     CurrentTrack.Playing = true;
                     PlayButtonVisibility = Visibility.Collapsed;
