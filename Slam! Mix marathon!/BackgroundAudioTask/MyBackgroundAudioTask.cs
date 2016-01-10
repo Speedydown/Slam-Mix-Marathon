@@ -28,6 +28,7 @@ using System.Threading.Tasks;
 using BaseLogic.DataHandler;
 using SlamLogic.BackgroundAudioTaskSharing;
 using SlamLogic.BackgroundAudioTaskSharing.Messages;
+using Windows.Storage.Streams;
 
 /* This background task will start running the first time the
  * MediaPlayer singleton instance is accessed from foreground. When a new audio 
@@ -60,6 +61,16 @@ namespace BackgroundAudioTask
         private AppState foregroundAppState = AppState.Unknown;
         private ManualResetEvent backgroundTaskStarted = new ManualResetEvent(false);
         private bool playbackStartedPreviously = false;
+
+        private Uri[] AlbumArtUri = new Uri[]
+        {
+                    new Uri("ms-appx:///Assets/MusicImages/129ed35c-b58b-437a-9166-91418a70ebf9.jpg"),
+                    new Uri("ms-appx:///Assets/MusicImages/2.jpg"),
+                    new Uri("ms-appx:///Assets/MusicImages/3.jpg"),
+                    new Uri("ms-appx:///Assets/MusicImages/4.jpg"),
+                    new Uri("ms-appx:///Assets/MusicImages/5.jpg"),
+                    new Uri("ms-appx:///Assets/MusicImages/6.jpg"),
+                    new Uri("ms-appx:///Assets/MusicImages/5DyNoB5N420.jpg")};
         #endregion
 
         #region IBackgroundTask and IBackgroundTaskInstance Interface Members and handlers
@@ -189,11 +200,11 @@ namespace BackgroundAudioTask
             smtc.DisplayUpdater.MusicProperties.Title = item.ShowName;
             smtc.DisplayUpdater.MusicProperties.Artist = item.MixSubTitle;
 
-            // var albumArtUri = item.Source.CustomProperties[AlbumArtKey] as Uri;
-            //if (albumArtUri != null)
-            ////    smtc.DisplayUpdater.Thumbnail = RandomAccessStreamReference.CreateFromUri(albumArtUri);
-            //else
-            //    smtc.DisplayUpdater.Thumbnail = null;
+            var albumArtUri = AlbumArtUri[CurrentMix.InternalID % AlbumArtUri.Count()];
+            if (albumArtUri != null)
+                smtc.DisplayUpdater.Thumbnail = RandomAccessStreamReference.CreateFromUri(albumArtUri);
+            else
+                smtc.DisplayUpdater.Thumbnail = null;
 
             smtc.DisplayUpdater.Update();
         }

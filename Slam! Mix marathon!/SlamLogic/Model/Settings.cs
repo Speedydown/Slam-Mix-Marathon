@@ -5,7 +5,19 @@ namespace SlamLogic.Model
 {
     public sealed class Settings : DataObject
     {
-        public bool OfflineMode { get; set; }
+        private bool _OfflineMode = false;
+        public bool OfflineMode
+        {
+            get
+            {
+                return _OfflineMode;
+            }
+            set
+            {
+                _OfflineMode = value;
+            }
+        }
+
         public DateTime LastRetrievedFromInternet { get; set; }
         public int SortingIndex { get; set; }
 

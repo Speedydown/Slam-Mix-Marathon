@@ -59,11 +59,46 @@
             <ColumnDefinition x:Name="DetailColumn" Width="*" />
         </Grid.ColumnDefinitions>
 
-        <Grid Background="Black" Padding="10,5" HorizontalAlignment="Stretch" Grid.ColumnSpan="2">
-            <Image Source="Assets/SlamLogo.png" Height="35" HorizontalAlignment="Left" />
+        <Grid Background="Black" Padding="10,5,0,5" HorizontalAlignment="Stretch" Grid.ColumnSpan="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <Image Source="Assets/SlamLogo.png" Height="32" HorizontalAlignment="Left" />
+            <Button x:Name="PrivacyButton" Grid.Column="2" Margin="2.5,0" Click="PrivacyButton_Click">
+                <Button.ContentTemplate>
+                    <DataTemplate>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <SymbolIcon Symbol="Important" VerticalAlignment="Center"/>
+                            <TextBlock Text="Privacy Policy" FontSize="11" Grid.Column="1" VerticalAlignment="Center"/>
+                        </Grid>
+                    </DataTemplate>
+                </Button.ContentTemplate>
+            </Button>
+            <ToggleButton x:Name="OfflineButton" IsChecked="{Binding CurrentSettings.OfflineMode}" Grid.Column="3" Click="OfflineButton_Click">
+                <ToggleButton.ContentTemplate>
+                    <DataTemplate>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <SymbolIcon Symbol="World" VerticalAlignment="Center"/>
+                            <TextBlock Text="Offline" Margin="5,0" FontSize="11" Grid.Column="1" VerticalAlignment="Center"/>
+                        </Grid>
+                    </DataTemplate>
+                </ToggleButton.ContentTemplate>
+            </ToggleButton>
         </Grid>
 
         <ComboBox x:Name="SortingComboBox"
+                  Visibility="{Binding NoMixes, Converter={StaticResource BooleanToOppositeVisibilityConverter}}"
                   HorizontalAlignment="Stretch"
                   Grid.Row="1" ItemsSource="{Binding SortingOptions}"
                   SelectedIndex="{Binding CurrentSortingState}"
@@ -148,7 +183,7 @@
             </ListView.ItemTemplate>
         </ListView>
 
-        <Grid Visibility="{Binding IsLoading, Converter={StaticResource BooleanToOppositeVisibilityConverter}}"
+        <Grid Visibility="{Binding HasSelectedMix, Converter={StaticResource BooleanToVisibilityConverter}}"
               Grid.Row="1"
               Grid.RowSpan="2"
             Grid.Column="1">
@@ -162,11 +197,25 @@
                 </ContentPresenter.ContentTransitions>
             </ContentPresenter>
         </Grid>
+        <Image Grid.Row="1"
+               Grid.RowSpan="2"
+               Grid.Column="1"
+               Visibility="{Binding ShowFillerImage, Converter={StaticResource BooleanToVisibilityConverter}}" 
+               Source="/Assets/Dodge-SLAMFM-belettering-autoreclame-Fleet-Full-Package-Designers-FPDesigners-01-1280x719.jpg" VerticalAlignment="Center" HorizontalAlignment="Stretch"/>
 
         <StackPanel x:Name="LoadingGrid" Visibility="{Binding IsLoading, Converter={StaticResource BooleanToVisibilityConverter}}" Grid.Row="1" Grid.RowSpan="2" Grid.ColumnSpan="2" VerticalAlignment="Center" HorizontalAlignment="Center">
             <ProgressRing IsActive="True" Height="75" Width="75" Foreground="{StaticResource SlamPink}" Margin="5"/>
             <TextBlock Style="{ThemeResource BaseTextBlockStyle}" Text="Bezig met ophalen van de laatste marathons!" MaxWidth="250" TextAlignment="Center" TextWrapping="WrapWholeWords" FontSize="20"/>
         </StackPanel>
+
+        <Grid x:Name="ErrorGrid" Visibility="{Binding NoMixes, Converter={StaticResource BooleanToVisibilityConverter}}" Grid.Row="1" Grid.RowSpan="2" Grid.ColumnSpan="2" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="50,0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <SymbolIcon Symbol="World" VerticalAlignment="Center"/>
+            <TextBlock Text="Er konden geen mixes worden gevonden!&#x0a;&#x0a;Is dit apparaat wel verbonden met het internet?" TextWrapping="WrapWholeWords" Margin="5,0" FontSize="15" Grid.Column="1" VerticalAlignment="Center" TextAlignment="Center"/>
+        </Grid>
 
         <Controls:MediaPlayer Grid.Row="3" Grid.ColumnSpan="2" />
     </Grid>

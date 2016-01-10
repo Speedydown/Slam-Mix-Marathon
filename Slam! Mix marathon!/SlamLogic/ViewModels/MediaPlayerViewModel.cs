@@ -93,6 +93,17 @@ namespace SlamLogic.ViewModels
             });
         }
 
+        public async Task UpdateTrackQueue()
+        {
+            TrackQueue = await MixDataHandler.instance.GetMixes(true);
+
+            if (CurrentTrack != null && CurrentTrack.Playing)
+            {
+                CurrentTrack = TrackQueue.Single(x => x.InternalID == CurrentTrack.InternalID);
+                CurrentTrack.Playing = true;
+            }
+        }
+
         private void UpdateTimerPosition()
         {
             try

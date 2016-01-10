@@ -19,12 +19,26 @@ namespace SlamLogic.ViewModels
         public Mix[] Mixes { get; private set; }
 
         public Task GetMixesTask { get; private set; }
-        public Mix CurrentMix { get; set; }
+
+        private Mix _CurrentMix = null;
+        public Mix CurrentMix
+        {
+            get
+            {
+                return _CurrentMix;
+            }
+            set
+            {
+                _CurrentMix = value;
+                NotifyPropertyChanged("HasSelectedMix");
+            }
+        }
+
         public int CurrentSortingState
         {
             get
             {
-                return SettingsDataHandler.instance.GetSettings().SortingIndex;
+                return CurrentSettings.SortingIndex;
             }
         }
 
@@ -35,6 +49,39 @@ namespace SlamLogic.ViewModels
                 return SettingsDataHandler.SortingStates;
             }
         }
+
+        public Settings CurrentSettings
+        {
+            get
+            {
+                return SettingsDataHandler.instance.GetSettings();
+            }
+        }
+
+        public bool NoMixes
+        {
+            get
+            {
+                return Mixes != null && Mixes.Count() == 0 && !IsLoading;
+            }
+        }
+
+        public bool HasSelectedMix
+        {
+            get
+            {
+                return CurrentMix != null;
+            }
+        }
+
+        public bool ShowFillerImage
+        {
+            get
+            {
+                return CurrentMix == null && !IsLoading;
+            }
+        }
+
 
         private MainpageViewModel() : base()
         {
@@ -55,20 +102,21 @@ namespace SlamLogic.ViewModels
             {
                 IsLoading = false;
                 CurrentMix = Mixes.FirstOrDefault();
+                NotifyPropertyChanged("NoMixes");
             });
 
         }
 
         public void OrderMixes(int Ordering)
         {
-            if (Mixes == null)
+            if (Mixes == null || Mixes.Count() == 0)
             {
+                NotifyPropertyChanged("Mixes");
                 return;
             }
 
-            Settings settings = SettingsDataHandler.instance.GetSettings();
-            settings.SortingIndex = Ordering;
-            SettingsDataHandler.instance.UpdateSettings(settings);
+            CurrentSettings.SortingIndex = Ordering;
+            SettingsDataHandler.instance.UpdateSettings(CurrentSettings);
 
             switch (Ordering)
             {
@@ -91,6 +139,28 @@ namespace SlamLogic.ViewModels
 
             NotifyPropertyChanged("Mixes");
             MessageService.SendMessageToBackground(new UpdatePlaylistMessage(true));
+        }
+
+        public async Task ToggleOfflineMode(bool OfflineMode)
+        {
+            Settings NewSettings = CurrentSettings;
+
+            NewSettings.OfflineMode = OfflineMode;
+            SettingsDataHandler.instance.UpdateSettings(NewSettings);
+
+            await MediaPlayerViewModel.instance.UpdateTrackQueue();
+
+            Mixes = MediaPlayerViewModel.instance.TrackQueue;
+
+            OrderMixes(CurrentSortingState);
+            CurrentMix = null;
+            UpdateBindings();
+        }
+        
+        public void UpdateBindings()
+        {
+            NotifyPropertyChanged("ShowFillerImage");
+            NotifyPropertyChanged("NoMixes");
         }
 
     }

@@ -1,4 +1,5 @@
-﻿using SlamLogic.DataHandlers;
+﻿using Slam__Mix_marathon_;
+using SlamLogic.DataHandlers;
 using SlamLogic.Model;
 using SlamLogic.ViewModels;
 using System;
@@ -61,7 +62,7 @@ namespace Slam__Mix_Marathon
             if (isNarrow && oldState == DefaultState && ViewModel.CurrentMix != null)
             {
                 // Resize down to the detail item. Don't play a transition.
-                //Frame.Navigate(typeof(DetailPage), _lastSelectedItem.ItemId, new SuppressNavigationTransitionInfo());
+                Frame.Navigate(typeof(MixDetailPage), ViewModel.CurrentMix.InternalID, new SuppressNavigationTransitionInfo());
             }
 
             if (!isNarrow && oldState == NarrowState && ViewModel.CurrentMix != null)
@@ -78,12 +79,13 @@ namespace Slam__Mix_Marathon
 
         private void MasterListView_ItemClick(object sender, ItemClickEventArgs e)
         {
-            ViewModel.CurrentMix = (Mix)e.ClickedItem; ;
+            ViewModel.CurrentMix = (Mix)e.ClickedItem;
+            ViewModel.UpdateBindings();
 
             if (AdaptiveStates.CurrentState == NarrowState)
             {
                 // Use "drill in" transition for navigating from master list to detail view
-            //    Frame.Navigate(typeof(DetailPage), clickedItem.ItemId, new DrillInNavigationTransitionInfo());
+                Frame.Navigate(typeof(MixDetailPage), ViewModel.CurrentMix.InternalID, new DrillInNavigationTransitionInfo());
             }
             else
             {
@@ -132,6 +134,16 @@ namespace Slam__Mix_Marathon
 
                 await MediaPlayerViewModel.instance.PlayMix(m);
             }
+        }
+
+        private void PrivacyButton_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private async void OfflineButton_Click(object sender, RoutedEventArgs e)
+        {
+            await ViewModel.ToggleOfflineMode((sender as ToggleButton).IsChecked.GetValueOrDefault());
         }
     }
 }

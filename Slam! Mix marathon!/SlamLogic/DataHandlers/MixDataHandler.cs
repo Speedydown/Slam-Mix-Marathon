@@ -38,11 +38,9 @@ namespace SlamLogic.DataHandlers
         };
 
         public Warning MixDataWarning { get; private set; }
-        private Settings CurrentSettings { get; set; }
 
         private MixDataHandler() : base()
         {
-            CurrentSettings = SettingsDataHandler.instance.GetSettings();
             CreateItemTable<Mix>();
         }
 
@@ -58,17 +56,21 @@ namespace SlamLogic.DataHandlers
 
         public async Task<Mix[]> GetMixes(bool Offline)
         {
+            Settings CurrentSettings = null;
+
             lock (DatabaseLocker)
             {
-                //Check if app is in offline mode
-                if (CurrentSettings.OfflineMode)
-                {
-                    Offline = true;
-                }
+                CurrentSettings = SettingsDataHandler.instance.GetSettings();
+            }
+
+            //Check if app is in offline mode
+            if (CurrentSettings.OfflineMode)
+            {
+                Offline = true;
             }
 
             Logger.Set("GetMixes");
-            if (!Offline && DateTime.Now.Subtract(CurrentSettings.LastRetrievedFromInternet).Minutes > 29)
+            if (!Offline && DateTime.Now.Subtract(CurrentSettings.LastRetrievedFromInternet).TotalMinutes > 29)
             {
                 MixDataWarning = null;
                 MarkMixesAsOld();
@@ -76,20 +78,33 @@ namespace SlamLogic.DataHandlers
 
                 await InternetTask;
                 ClearOldMixes();
-                CurrentSettings.LastRetrievedFromInternet = DateTime.Now;
-                SettingsDataHandler.instance.UpdateSettings(CurrentSettings);
             }
 
             Logger.Set("GetMixes");
 
+            Mix[] Mixes = null;
+
             lock (DatabaseLocker)
             {
-                return GetItems<Mix>()
+                Mixes = GetItems<Mix>()
                 .OrderByDescending(m => m.RealDate)
                 .ThenByDescending(m => m.StartTime)
                 .ThenByDescending(m => m.InternalID)
                 .ToArray();
+
+                if (!Offline && Mixes.Count() > 0)
+                {
+                    CurrentSettings.LastRetrievedFromInternet = DateTime.Now;
+                    SettingsDataHandler.instance.UpdateSettings(CurrentSettings);
+                }
             }
+
+            if (CurrentSettings.OfflineMode)
+            {
+                Mixes = Mixes.Where(m => m.Downloaded).ToArray();
+            }
+
+            return Mixes;
         }
 
         private async Task GetMixesFromInternet()

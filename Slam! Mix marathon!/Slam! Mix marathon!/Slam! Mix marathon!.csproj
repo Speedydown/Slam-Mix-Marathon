@@ -107,6 +107,9 @@
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="MixDetailPage.xaml.cs">
+      <DependentUpon>MixDetailPage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -116,7 +119,15 @@
     <None Include="Slam! Mix marathon!_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Assets\Dodge-SLAMFM-belettering-autoreclame-Fleet-Full-Package-Designers-FPDesigners-01-1280x719.jpg" />
     <Content Include="Assets\MixMarathon.png" />
+    <Content Include="Assets\MusicImages\129ed35c-b58b-437a-9166-91418a70ebf9.jpg" />
+    <Content Include="Assets\MusicImages\2.jpg" />
+    <Content Include="Assets\MusicImages\3.jpg" />
+    <Content Include="Assets\MusicImages\4.jpg" />
+    <Content Include="Assets\MusicImages\5.jpg" />
+    <Content Include="Assets\MusicImages\5DyNoB5N420.jpg" />
+    <Content Include="Assets\MusicImages\6.jpg" />
     <Content Include="Assets\SlamLogo.png" />
     <Content Include="Properties\Default.rd.xml" />
     <Content Include="Assets\LockScreenLogo.scale-200.png" />
@@ -143,6 +154,10 @@
     <Page Include="MainPage.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="MixDetailPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
   <ItemGroup>
