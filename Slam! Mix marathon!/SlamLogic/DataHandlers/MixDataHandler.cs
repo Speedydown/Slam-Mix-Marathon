@@ -1,4 +1,6 @@
-﻿using BaseLogic.DataHandler;
+﻿using BaseLogic.ClientIDHandler;
+using BaseLogic.DataHandler;
+using BaseLogic.ExceptionHandler;
 using BaseLogic.Utils;
 using SlamLogic.Model;
 using System;
@@ -10,6 +12,7 @@ using System.Text;
 using System.Threading.Tasks;
 using WebCrawlerTools;
 using Windows.ApplicationModel.Resources;
+using Windows.System;
 
 namespace SlamLogic.DataHandlers
 {
@@ -42,6 +45,12 @@ namespace SlamLogic.DataHandlers
         private MixDataHandler() : base()
         {
             CreateItemTable<Mix>();
+
+            Windows.UI.Xaml.Application.Current.UnhandledException += (async (sender, e)  => 
+            {
+                AppException ae = new AppException(e.Exception);
+                await ExceptionHandler.instance.PostException(ae);
+            });
         }
 
         public Mix GetMixByID(int ID)
@@ -96,6 +105,17 @@ namespace SlamLogic.DataHandlers
                 {
                     CurrentSettings.LastRetrievedFromInternet = DateTime.Now;
                     SettingsDataHandler.instance.UpdateSettings(CurrentSettings);
+
+                    //Post appstats
+                    Task.Run(async () =>
+                    {
+                        await ClientIDHandler.instance.PostAppStats(ClientIDHandler.AppName.SlamMix);
+
+                        if (ClientIDHandler.instance.NumberOfRequests == 25)
+                        {
+                            await AskForReview();
+                        }
+                    });
                 }
             }
 
@@ -105,6 +125,26 @@ namespace SlamLogic.DataHandlers
             }
 
             return Mixes;
+        }
+
+        private async Task AskForReview()
+        {
+            var dialog = new Windows.UI.Popups.MessageDialog(
+                "Goede feedback is belangrijk en zorgt ervoor dat onze app meer opvalt in de store. Geef ons daarom uw mening over deze app!",
+                "Review");
+
+            dialog.Commands.Add(new Windows.UI.Popups.UICommand("Review") { Id = 0 });
+            dialog.Commands.Add(new Windows.UI.Popups.UICommand("Nee bedankt") { Id = 1 });
+
+            dialog.DefaultCommandIndex = 0;
+            dialog.CancelCommandIndex = 1;
+
+            var result = await dialog.ShowAsync();
+
+            if (result.Label == "Review")
+            {
+                await Launcher.LaunchUriAsync(new Uri(string.Format("ms-windows-store:REVIEW?PFN={0}", Windows.ApplicationModel.Package.Current.Id.FamilyName)));
+            }
         }
 
         private async Task GetMixesFromInternet()
