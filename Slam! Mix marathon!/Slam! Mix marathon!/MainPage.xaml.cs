@@ -10,6 +10,7 @@ using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading.Tasks;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -30,6 +31,15 @@ namespace Slam__Mix_Marathon
         public MainPage()
         {
             this.InitializeComponent();
+
+            NavigationCacheMode = NavigationCacheMode.Required;
+            SystemNavigationManager.GetForCurrentView().AppViewBackButtonVisibility = AppViewBackButtonVisibility.Collapsed;
+
+            SystemNavigationManager.GetForCurrentView().BackRequested += (s, e) =>
+            {
+                Frame.Navigate(typeof(MainPage));
+                e.Handled = true;
+            };
         }
 
         protected async override void OnNavigatedTo(NavigationEventArgs e)
@@ -39,15 +49,19 @@ namespace Slam__Mix_Marathon
             UpdateForVisualState(AdaptiveStates.CurrentState);
             DisableContentTransitions();
 
-            ViewModel = MainpageViewModel.instance;
-            DataContext = ViewModel;
-
-            if (ViewModel.GetMixesTask != null && !ViewModel.GetMixesTask.IsCompleted)
+            if (DataContext == null)
             {
-                await ViewModel.GetMixesTask;
+                ViewModel = MainpageViewModel.instance;
+                DataContext = ViewModel;
+
+                if (ViewModel.GetMixesTask != null && !ViewModel.GetMixesTask.IsCompleted)
+                {
+                    await ViewModel.GetMixesTask;
+                }
             }
-            
+
             MasterListView.SelectedItem = ViewModel.CurrentMix;
+            SortingComboBox.SelectedIndex = ViewModel.CurrentSortingState;
         }
 
         private void AdaptiveStates_CurrentStateChanged(object sender, VisualStateChangedEventArgs e)
@@ -97,7 +111,7 @@ namespace Slam__Mix_Marathon
         private void LayoutRoot_Loaded(object sender, RoutedEventArgs e)
         {
             //Assure we are displaying the correct item. This is necessary in certain adaptive cases.
-           MasterListView.SelectedItem = ViewModel.CurrentMix;
+            MasterListView.SelectedItem = ViewModel.CurrentMix;
         }
 
         private void EnableContentTransitions()
@@ -118,7 +132,7 @@ namespace Slam__Mix_Marathon
         {
             int SelectedIndex = (sender as ComboBox).SelectedIndex;
 
-            ViewModel.OrderMixes(SelectedIndex); 
+            ViewModel.OrderMixes(SelectedIndex);
         }
 
         private async void Grid_Holding(object sender, HoldingRoutedEventArgs e)
@@ -138,7 +152,7 @@ namespace Slam__Mix_Marathon
 
         private void PrivacyButton_Click(object sender, RoutedEventArgs e)
         {
-
+            Frame.Navigate(typeof(PrivacyPolicy));
         }
 
         private async void OfflineButton_Click(object sender, RoutedEventArgs e)

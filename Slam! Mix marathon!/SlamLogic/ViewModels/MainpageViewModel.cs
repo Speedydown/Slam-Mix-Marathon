@@ -78,7 +78,7 @@ namespace SlamLogic.ViewModels
         {
             get
             {
-                return CurrentMix == null && !IsLoading;
+                return CurrentMix == null && !IsLoading && Mixes.Count() != 0;
             }
         }
 
@@ -109,7 +109,9 @@ namespace SlamLogic.ViewModels
 
         public void OrderMixes(int Ordering)
         {
-            if (Mixes == null || Mixes.Count() == 0)
+            Settings CurrentSettings = this.CurrentSettings;
+
+            if (Mixes == null || Mixes.Count() == 0 || CurrentSettings.SortingIndex == Ordering)
             {
                 NotifyPropertyChanged("Mixes");
                 return;
@@ -143,6 +145,11 @@ namespace SlamLogic.ViewModels
 
         public async Task ToggleOfflineMode(bool OfflineMode)
         {
+            if (GetMixesTask != null && !GetMixesTask.IsCompleted)
+            {
+                await GetMixesTask;
+            }
+
             Settings NewSettings = CurrentSettings;
 
             NewSettings.OfflineMode = OfflineMode;
@@ -156,9 +163,10 @@ namespace SlamLogic.ViewModels
             CurrentMix = null;
             UpdateBindings();
         }
-        
+
         public void UpdateBindings()
         {
+            NotifyPropertyChanged("Mixes");
             NotifyPropertyChanged("ShowFillerImage");
             NotifyPropertyChanged("NoMixes");
         }

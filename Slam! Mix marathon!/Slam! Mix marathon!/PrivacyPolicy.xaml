@@ -1,0 +1,35 @@
+﻿<Page
+    x:Class="Slam__Mix_marathon_.PrivacyPolicy"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Slam__Mix_marathon_"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+
+        <Grid Margin="7,0,2,0">
+            <Grid.ChildrenTransitions>
+                <TransitionCollection>
+                    <EntranceThemeTransition/>
+                </TransitionCollection>
+            </Grid.ChildrenTransitions>
+            <ScrollViewer VerticalScrollMode="Auto" ZoomMode="Disabled">
+                <StackPanel>
+                    <TextBlock Margin="0,0,0,10" Style="{StaticResource HeaderTextBlockStyle}" Text="Privacy policy"/>
+                    <TextBlock Text="Privacybeleid van Slam!" FontSize="25" FontWeight="ExtraBold" />
+                    <TextBlock FontSize="20" Text="Neem contact op met de Eigenaar om informatie te ontvangen over welke Persoonsgegevens, voor welke doelen en met welke partijen worden gedeeld." TextWrapping="WrapWholeWords" Margin="0,0,0,25"/>
+                    <TextBlock FontSize="20" Text="Soorten verzamelde Gegevens" FontWeight="Bold"/>
+                    <TextBlock FontSize="20" Text="De eigenaar verstrekt geen lijst van types persoonsgegevens die worden verzameld.&#13;&#13;Overige verzamelde Persoonsgegevens kunnen in andere bepalingen van dit privacybeleid of in een specifieke uitleg in samenhang met de verzameling van de gegevens worden beschreven.
+De Persoonsgegevens kunnen door de Gebruiker zelf worden aangeleverd of automatisch worden verzameld door het gebruik van deze Applicatie.&#13;&#13;Gebruik van cookies - of andere tracking tools - door deze Applicatie of door de eigenaren van de diensten van derden die worden gebruikt door deze Applicatie, dienen, tenzij anderszins wordt aangegeven, om Gebruikers te identificeren en hun voorkeuren op te slaan, met uitsluitend als doel de door de Gebruiker gevraagde dienst te verlenen.
+Door het niet verstrekken van bepaalde Persoonsgegevens kan deze Applicatie de diensten mogelijk niet verlenen.&#13;&#13;De gebruiker neemt verantwoordelijkheid voor de Persoonsgegevens van derden die worden gepubliceerd of gedeeld door middel van deze Applicatie en verklaart het recht te hebben om deze te publiceren of uit te zenden, waarmee de Verantwoordelijke voor de verwerking van de Gegevens van alle aansprakelijkheid wordt ontheven.
+" TextWrapping="WrapWholeWords"/>
+                    <TextBlock FontSize="20" Margin="0,25,0,0" Text="Wijze en plaats van de Gegevensverwerking" FontWeight="Bold" TextWrapping="WrapWholeWords"/>
+                    <TextBlock FontSize="20" Text="De Verantwoordelijke voor de verwerking van de Gegevens verwerkt de Gegevens van de Gebruikers op een correcte wijze en neemt passende beveiligingsmaatregelen om onbevoegde toegang tot, bekendmaking, wijziging of vernietiging van de Gegevens zonder toestemming te voorkomen.&#13;&#13;De verwerking van de Gegevens vindt plaats met gebruik van computers en/of IT-tools, waarbij organisatieprocedures en werkwijzen worden gevolgd die nauw aansluiten op de aangegeven doelen. Naast de Verantwoordelijke voor de verwerking van de Gegevens kunnen de gegevens in bepaalde gevallen ook toegankelijk zijn voor bepaalde met de verwerking belaste personen die zijn betrokken bij de exploitatie van de site (beheer, verkoop, marketing, juridisch, systeembeheer) of door de Eigenaar als Gegevensverwerkers aangestelde externe partijen (zoals externe technische serviceproviders, mailprogramma's, hostingproviders, IT-bedrijven, communicatiebureaus). De bijgewerkte lijst van deze partijen kan te allen tijde bij de Verantwoordelijke voor de verwerking van de Gegevens worden aangevraagd.
+" TextWrapping="WrapWholeWords"/>
+                </StackPanel>
+            </ScrollViewer>
+        </Grid>
+    </Grid>
+</Page>

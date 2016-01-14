@@ -7,6 +7,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:Controls="using:Slam__Mix_Marathon.Controls"
     xmlns:Converters="using:BaseLogic.Converters"
+    xmlns:Universal="using:Microsoft.AdMediator.Universal" 
     mc:Ignorable="d">
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">

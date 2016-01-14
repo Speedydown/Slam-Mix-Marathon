@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
 VisualStudioVersion = 14.0.24720.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Slam! Mix marathon!", "Slam! Mix marathon!\Slam! Mix marathon!.csproj", "{85CC8C35-DD31-4C5A-A8DE-9B2939344FB0}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MixMarathon", "Slam! Mix marathon!\MixMarathon.csproj", "{85CC8C35-DD31-4C5A-A8DE-9B2939344FB0}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SlamLogic", "SlamLogic\SlamLogic.csproj", "{D897D491-D2BA-42D3-A1CF-8E51824412F5}"
 EndProject

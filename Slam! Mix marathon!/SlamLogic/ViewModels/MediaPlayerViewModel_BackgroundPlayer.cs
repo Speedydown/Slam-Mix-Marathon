@@ -191,7 +191,13 @@ namespace SlamLogic.ViewModels
                             TrackQueue = MainpageViewModel.instance.Mixes;
                         }
 
-                        CurrentTrack = TrackQueue.Single(s => s.InternalID == updateMediaPlayerInfoMessage.InternalMixID);
+                        Mix PlayingTrack = CurrentTrack;
+                        CurrentTrack = TrackQueue.Where(s => s.InternalID == updateMediaPlayerInfoMessage.InternalMixID).FirstOrDefault();
+
+                        if (CurrentTrack == null)
+                        {
+                            CurrentTrack = PlayingTrack;
+                        }
 
                         // Ensure track buttons are re-enabled since they are disabled when pressed
                         foreach (Mix m in TrackQueue.Where(m => m.Playing))
@@ -202,11 +208,14 @@ namespace SlamLogic.ViewModels
                             }
                         }
 
-                        CurrentTrack.Playing = true;
+                        if (CurrentTrack != null)
+                        {
+                            CurrentTrack.Playing = true;
 
-                        NextButtonIsEnabled = true;
-                        PreviousButtonIsEnabled = true;
-                        RefreshBindings();
+                            NextButtonIsEnabled = true;
+                            PreviousButtonIsEnabled = true;
+                            RefreshBindings();
+                        }
                     }
                 });
 

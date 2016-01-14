@@ -35,6 +35,7 @@
                         <Setter Target="Row1.Height" Value="Auto" />
                         <Setter Target="Row2.Height" Value="Auto" />
                         <Setter Target="OptionalColumn.Width" Value="0" />
+                        <Setter Target="MixDetailAdControl.Visibility" Value="Visible"/>
                     </VisualState.Setters>
                 </VisualState>
 
@@ -46,7 +47,8 @@
                     <VisualState.Setters>
                         <Setter Target="AdGrid.Grid.Row" Value="3" />
                         <Setter Target="AdGrid.Grid.Column" Value="0" />
-                        <Setter Target="AdGrid.Grid.Visibility" Value="Collapsed" />
+                        <Setter Target="ADControl.Visibility" Value="Collapsed" />
+                        <Setter Target="MixDetailAdControl.Visibility" Value="Visible"/>
                         <Setter Target="StatusPanel.Grid.Row" Value="2" />
                         <Setter Target="StatusPanel.Grid.ColumnSpan" Value="1" />
                         <Setter Target="OptionalColumn.Width" Value="0" />
@@ -165,9 +167,11 @@
                 <Image Source="/Assets/MixMarathon.png" Stretch="Uniform" VerticalAlignment="Top" HorizontalAlignment="Stretch" MaxWidth="600"/>
             </Grid>
             <Grid x:Name="AdGrid" HorizontalAlignment="Stretch" Grid.Row="1" Grid.Column="1">
-                <Universal:AdMediatorControl x:Name="ADControl" Id="EE4FD6FF-C498-4A60-AB33-2539B2416535" HorizontalAlignment="Stretch" 
+                <Universal:AdMediatorControl x:Name="MixDetailAdControl" Visibility="Collapsed" Id="DE447136-5C4E-44E8-8A2A-8FE16CD67400" HorizontalAlignment="Center" Height="50" Width="300" />
+                <Universal:AdMediatorControl x:Name="ADControl" Id="EE4FD6FF-C498-4A60-AB33-2539B2416535" HorizontalAlignment="Center" 
                                              AdMediatorFilled="ADControl_AdMediatorFilled"
                                              AdMediatorError="ADControl_AdMediatorError" Height="250" Width="300" />
+                
             </Grid>
 
         </Grid>

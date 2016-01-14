@@ -26,15 +26,9 @@ namespace Slam__Mix_marathon_
         public MixDetailPage()
         {
             this.InitializeComponent();
-
-            SystemNavigationManager.GetForCurrentView().BackRequested += (s, e) =>
-            {
-                Frame.Navigate(typeof(MainPage));
-                e.Handled = true;
-            };
         }
 
-        protected override void OnNavigatedTo(NavigationEventArgs e)
+        protected async override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
             int MixID = (int)e.Parameter;
@@ -44,7 +38,12 @@ namespace Slam__Mix_marathon_
                 Frame.Navigate(typeof(MainPage));
             }
 
-            this.DataContext = MainpageViewModel.instance.Mixes.Single(m => m.InternalID == MixID);
+            if (MediaPlayerViewModel.instance.TrackQueue == null)
+            {
+                await MediaPlayerViewModel.instance.UpdateTrackQueue();
+            }
+
+            this.DataContext = MediaPlayerViewModel.instance.TrackQueue.Single(m => m.InternalID == MixID);
         }
 
 

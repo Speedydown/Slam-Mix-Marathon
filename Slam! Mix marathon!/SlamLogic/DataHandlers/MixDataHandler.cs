@@ -11,8 +11,10 @@ using System.Resources;
 using System.Text;
 using System.Threading.Tasks;
 using WebCrawlerTools;
+using Windows.ApplicationModel.Core;
 using Windows.ApplicationModel.Resources;
 using Windows.System;
+using Windows.UI.Core;
 
 namespace SlamLogic.DataHandlers
 {
@@ -46,11 +48,21 @@ namespace SlamLogic.DataHandlers
         {
             CreateItemTable<Mix>();
 
-            Windows.UI.Xaml.Application.Current.UnhandledException += (async (sender, e)  => 
+            try
             {
-                AppException ae = new AppException(e.Exception);
-                await ExceptionHandler.instance.PostException(ae);
-            });
+                if (Windows.UI.Xaml.Application.Current != null)
+                {
+                    Windows.UI.Xaml.Application.Current.UnhandledException += (async (sender, e) =>
+                    {
+                        AppException ae = new AppException(e.Exception);
+                        await ExceptionHandler.instance.PostException(ae);
+                    });
+                }
+            }
+            catch
+            {
+
+            }
         }
 
         public Mix GetMixByID(int ID)
@@ -111,7 +123,7 @@ namespace SlamLogic.DataHandlers
                     {
                         await ClientIDHandler.instance.PostAppStats(ClientIDHandler.AppName.SlamMix);
 
-                        if (ClientIDHandler.instance.NumberOfRequests == 25)
+                        if (ClientIDHandler.instance.NumberOfRequests == 5)
                         {
                             await AskForReview();
                         }
@@ -139,11 +151,29 @@ namespace SlamLogic.DataHandlers
             dialog.DefaultCommandIndex = 0;
             dialog.CancelCommandIndex = 1;
 
-            var result = await dialog.ShowAsync();
-
-            if (result.Label == "Review")
+            try
             {
-                await Launcher.LaunchUriAsync(new Uri(string.Format("ms-windows-store:REVIEW?PFN={0}", Windows.ApplicationModel.Package.Current.Id.FamilyName)));
+                await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, async () =>
+                {
+                    try
+                    {
+                        var result = await dialog.ShowAsync();
+
+                        if (result.Label == "Review")
+                        {
+                            await Launcher.LaunchUriAsync(new Uri(string.Format("ms-windows-store:REVIEW?PFN={0}", Windows.ApplicationModel.Package.Current.Id.FamilyName)));
+                        }
+                    }
+                    catch
+                    {
+
+                    }
+                });
+                
+            }
+            catch
+            {
+
             }
         }
 

@@ -99,8 +99,12 @@ namespace SlamLogic.ViewModels
 
             if (CurrentTrack != null && CurrentTrack.Playing)
             {
-                CurrentTrack = TrackQueue.Single(x => x.InternalID == CurrentTrack.InternalID);
-                CurrentTrack.Playing = true;
+                CurrentTrack = TrackQueue.Where(x => x.InternalID == CurrentTrack.InternalID).FirstOrDefault();
+
+                if (CurrentTrack != null)
+                {
+                    CurrentTrack.Playing = true;
+                }
             }
         }
 
@@ -180,15 +184,6 @@ namespace SlamLogic.ViewModels
 
             SetNavigationButtonsState();
         }
-
-        //public void Pause()
-        //{
-        //    BackgroundMediaPlayer.Current.Pause();
-        //    PlayButtonVisibility = Visibility.Visible;
-        //    StopButtonVisibility = Visibility.Collapsed;
-        //    DisplayUpdater();
-        //    RefreshBindings();
-        //}
 
         public void Stop()
         {
