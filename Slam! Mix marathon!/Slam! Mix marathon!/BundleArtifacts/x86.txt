@@ -1,5 +1,0 @@
-MainPackage=C:\Users\Teake\Documents\GitHub\Slam-Mix-Marathon\Slam! Mix marathon!\Slam! Mix marathon!\bin\x86\Release\MixMarathon_1.1.6.0_x86.appx
-SymbolPackage=C:\Users\Teake\Documents\GitHub\Slam-Mix-Marathon\Output\MixMarathon_1.1.6.0_Test\MixMarathon_1.1.6.0_x86.appxsym
-ResourcePack=C:\Users\Teake\Documents\GitHub\Slam-Mix-Marathon\Slam! Mix marathon!\Slam! Mix marathon!\bin\x86\Release\MixMarathon_1.1.6.0_scale-100.appx
-ResourcePack=C:\Users\Teake\Documents\GitHub\Slam-Mix-Marathon\Slam! Mix marathon!\Slam! Mix marathon!\bin\x86\Release\MixMarathon_1.1.6.0_scale-150.appx
-ResourcePack=C:\Users\Teake\Documents\GitHub\Slam-Mix-Marathon\Slam! Mix marathon!\Slam! Mix marathon!\bin\x86\Release\MixMarathon_1.1.6.0_scale-400.appx

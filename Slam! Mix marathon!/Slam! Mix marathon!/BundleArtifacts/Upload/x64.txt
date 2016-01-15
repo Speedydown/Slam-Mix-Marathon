@@ -1,2 +1,0 @@
-MainPackage=C:\Users\Teake\Documents\GitHub\Slam-Mix-Marathon\Slam! Mix marathon!\Slam! Mix marathon!\bin\x64\Release\Upload\Slam! Mix marathon!_1.1.1.0_x64.appx
-SymbolPackage=C:\Users\Teake\Documents\GitHub\Slam-Mix-Marathon\Slam! Mix marathon!\Slam! Mix marathon!\AppPackages\Slam! Mix marathon!_1.1.1.0\Slam! Mix marathon!_1.1.1.0_x64.appxsym
