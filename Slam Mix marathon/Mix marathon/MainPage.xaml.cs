@@ -94,7 +94,6 @@ namespace Slam__Mix_Marathon
         private void MasterListView_ItemClick(object sender, ItemClickEventArgs e)
         {
             ViewModel.CurrentMix = (Mix)e.ClickedItem;
-            ViewModel.UpdateBindings();
 
             if (AdaptiveStates.CurrentState == NarrowState)
             {
