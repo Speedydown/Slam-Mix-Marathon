@@ -221,6 +221,7 @@ namespace SlamLogic.DataHandlers
             }
 
             Task.WaitAll(URLTasks.ToArray());
+
             SaveItems(UpdatedMixes);
         }
 

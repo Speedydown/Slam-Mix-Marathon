@@ -112,14 +112,17 @@ namespace SlamLogic.ViewModels
         {
             Settings CurrentSettings = this.CurrentSettings;
 
-            if (Mixes == null || Mixes.Count() == 0 || CurrentSettings.SortingIndex == Ordering)
+            if (Mixes == null || Mixes.Count() == 0)
             {
                 NotifyPropertyChanged("Mixes");
                 return;
             }
 
-            CurrentSettings.SortingIndex = Ordering;
-            SettingsDataHandler.instance.UpdateSettings(CurrentSettings);
+            if (CurrentSettings.SortingIndex != Ordering)
+            {
+                CurrentSettings.SortingIndex = Ordering;
+                SettingsDataHandler.instance.UpdateSettings(CurrentSettings);
+            }
 
             switch (Ordering)
             {
