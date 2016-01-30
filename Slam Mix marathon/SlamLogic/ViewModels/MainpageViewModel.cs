@@ -31,6 +31,7 @@ namespace SlamLogic.ViewModels
             {
                 _CurrentMix = value;
                 NotifyPropertyChanged("HasSelectedMix");
+                NotifyPropertyChanged("ShowFillerImage");
             }
         }
 
