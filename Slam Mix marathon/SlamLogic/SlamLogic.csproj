@@ -142,19 +142,15 @@
     <Content Include="Properties\SlamLogic.rd.xml" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\Speedydown.nl-API\BaseLogic\BaseLogic.csproj">
-      <Project>{ee050c83-148e-4402-b25c-bc667d855965}</Project>
-      <Name>BaseLogic</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\..\Speedydown.nl-API\XamlControlLibrary\XamlControlLibrary.csproj">
-      <Project>{09f3efe7-ac3c-4189-90f1-c7bf9e01af96}</Project>
-      <Name>XamlControlLibrary</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <SDKReference Include="Microsoft.VCLibs.120, Version=14.0">
       <Name>Microsoft Visual C++ 2013 Runtime Package for Windows Universal</Name>
     </SDKReference>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\win10apps.nl\BaseLogic\BaseLogic.csproj">
+      <Project>{ee050c83-148e-4402-b25c-bc667d855965}</Project>
+      <Name>BaseLogic</Name>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>

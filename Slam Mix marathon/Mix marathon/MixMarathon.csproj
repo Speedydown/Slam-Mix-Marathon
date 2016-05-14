@@ -11,7 +11,7 @@
     <AssemblyName>MixMarathon</AssemblyName>
     <DefaultLanguage>nl-NL</DefaultLanguage>
     <TargetPlatformIdentifier>UAP</TargetPlatformIdentifier>
-    <TargetPlatformVersion>10.0.10586.0</TargetPlatformVersion>
+    <TargetPlatformVersion>10.0.10240.0</TargetPlatformVersion>
     <TargetPlatformMinVersion>10.0.10240.0</TargetPlatformMinVersion>
     <MinimumVisualStudioVersion>14</MinimumVisualStudioVersion>
     <FileAlignment>512</FileAlignment>
@@ -195,13 +195,9 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\Speedydown.nl-API\BaseLogic\BaseLogic.csproj">
+    <ProjectReference Include="..\..\..\win10apps.nl\BaseLogic\BaseLogic.csproj">
       <Project>{ee050c83-148e-4402-b25c-bc667d855965}</Project>
       <Name>BaseLogic</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\..\Speedydown.nl-API\XamlControlLibrary\XamlControlLibrary.csproj">
-      <Project>{09f3efe7-ac3c-4189-90f1-c7bf9e01af96}</Project>
-      <Name>XamlControlLibrary</Name>
     </ProjectReference>
     <ProjectReference Include="..\BackgroundAudioTask\BackgroundAudioTask.csproj">
       <Project>{8d0109b3-fea4-4740-b850-24a1522348cb}</Project>
@@ -222,8 +218,8 @@
     <SDKReference Include="Microsoft.VCLibs, Version=14.0">
       <Name>Visual C++ 2015 Runtime for Universal Windows Platform Apps</Name>
     </SDKReference>
-    <SDKReference Include="SQLite.UAP.2015, Version=3.10.2">
-      <Name>SQLite for Universal App Platform %28SQLite.UAP.2015, Version=3.10.2%29</Name>
+    <SDKReference Include="SQLite.UAP.2015, Version=3.9.2">
+      <Name>SQLite for Universal App Platform %28SQLite.UAP.2015, Version=3.9.2%29</Name>
     </SDKReference>
   </ItemGroup>
   <ItemGroup>

@@ -101,7 +101,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\Speedydown.nl-API\BaseLogic\BaseLogic.csproj">
+    <ProjectReference Include="..\..\..\win10apps.nl\BaseLogic\BaseLogic.csproj">
       <Project>{ee050c83-148e-4402-b25c-bc667d855965}</Project>
       <Name>BaseLogic</Name>
     </ProjectReference>
@@ -114,7 +114,7 @@
     <SDKReference Include="Microsoft.VCLibs, Version=14.0">
       <Name>Visual C++ 2015 Runtime for Universal Windows Platform Apps</Name>
     </SDKReference>
-    <SDKReference Include="SQLite.UAP.2015, Version=3.10.2">
+    <SDKReference Include="SQLite.UAP.2015, Version=3.9.2">
       <Name>SQLite for Universal App Platform</Name>
     </SDKReference>
   </ItemGroup>

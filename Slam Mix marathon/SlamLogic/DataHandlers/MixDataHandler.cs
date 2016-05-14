@@ -23,6 +23,7 @@ namespace SlamLogic.DataHandlers
         private const string DebugString = "[Mix] {0} mix {1} on {2} {3}";
         private static readonly string[] Whitelist = new string[]
         {
+            "MixMarathon",
             "Mix Marathon",
             "The Partysquad",
             "FLOW",
