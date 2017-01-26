@@ -175,5 +175,14 @@ namespace SlamLogic.ViewModels
             NotifyPropertyChanged("NoMixes");
         }
 
+        public override async Task Load()
+        {
+   
+        }
+
+        public override void Unload()
+        {
+       
+        }
     }
 }

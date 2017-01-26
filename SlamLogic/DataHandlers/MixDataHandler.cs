@@ -51,8 +51,8 @@ namespace SlamLogic.DataHandlers
                 {
                     Windows.UI.Xaml.Application.Current.UnhandledException += (async (sender, e) =>
                     {
-                        AppException ae = new AppException(e.Exception);
-                        await ExceptionHandler.instance.PostException(ae, (int)ClientIDHandler.AppName.SlamMix);
+                        AppException ae = new AppException(e.Exception, (int)ClientIDHandler.AppName.SlamMix);
+                        await ExceptionHandler.instance.PostException(ae);
                     });
                 }
             }
@@ -294,6 +294,11 @@ namespace SlamLogic.DataHandlers
                 {
                     Mp3URLSource = Mp3URLSource.Substring(HTMLParserUtil.GetPositionOfStringInHTMLSource("data-source=\"", Mp3URLSource, false));
                     string MP3URL = HTMLParserUtil.GetContentAndSubstringInput("data-source=\"", "\">", Mp3URLSource, out Mp3URLSource, "", false);
+
+                    if (!MP3URL.StartsWith("http:"))
+                    {
+                        MP3URL = "http:" + MP3URL;
+                    }
 
                     string StartTime = HTMLParserUtil.GetContentAndSubstringInput("\">", "</span>", Mp3URLSource, out Mp3URLSource);
 

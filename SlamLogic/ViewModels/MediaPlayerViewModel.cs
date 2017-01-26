@@ -238,5 +238,15 @@ namespace SlamLogic.ViewModels
 
             return TrackQueue.ToList().FindIndex(m => m.InternalID == CurrentTrack.InternalID);
         }
+
+        public override async Task Load()
+        {
+            
+        }
+
+        public override void Unload()
+        {
+          
+        }
     }
 }

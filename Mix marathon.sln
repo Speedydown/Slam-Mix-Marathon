@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.25123.0
+VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SlamLogic", "SlamLogic\SlamLogic.csproj", "{D897D491-D2BA-42D3-A1CF-8E51824412F5}"
 EndProject
@@ -9,7 +9,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BackgroundAudioTask", "Back
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MixMarathon", "Mix marathon\MixMarathon.csproj", "{85CC8C35-DD31-4C5A-A8DE-9B2939344FB0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BaseLogic", "..\..\win10apps.nl\BaseLogic\BaseLogic.csproj", "{EE050C83-148E-4402-B25C-BC667D855965}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BaseLogic_Uwp", "..\win10apps.nl\Nuget\BaseLogic\BaseLogic_Uwp.csproj", "{AF902675-CE7B-4601-96F6-F0821BE0A44A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -73,22 +73,22 @@ Global
 		{85CC8C35-DD31-4C5A-A8DE-9B2939344FB0}.Release|x86.ActiveCfg = Release|x86
 		{85CC8C35-DD31-4C5A-A8DE-9B2939344FB0}.Release|x86.Build.0 = Release|x86
 		{85CC8C35-DD31-4C5A-A8DE-9B2939344FB0}.Release|x86.Deploy.0 = Release|x86
-		{EE050C83-148E-4402-B25C-BC667D855965}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{EE050C83-148E-4402-B25C-BC667D855965}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{EE050C83-148E-4402-B25C-BC667D855965}.Debug|ARM.ActiveCfg = Debug|ARM
-		{EE050C83-148E-4402-B25C-BC667D855965}.Debug|ARM.Build.0 = Debug|ARM
-		{EE050C83-148E-4402-B25C-BC667D855965}.Debug|x64.ActiveCfg = Debug|x64
-		{EE050C83-148E-4402-B25C-BC667D855965}.Debug|x64.Build.0 = Debug|x64
-		{EE050C83-148E-4402-B25C-BC667D855965}.Debug|x86.ActiveCfg = Debug|x86
-		{EE050C83-148E-4402-B25C-BC667D855965}.Debug|x86.Build.0 = Debug|x86
-		{EE050C83-148E-4402-B25C-BC667D855965}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{EE050C83-148E-4402-B25C-BC667D855965}.Release|Any CPU.Build.0 = Release|Any CPU
-		{EE050C83-148E-4402-B25C-BC667D855965}.Release|ARM.ActiveCfg = Release|ARM
-		{EE050C83-148E-4402-B25C-BC667D855965}.Release|ARM.Build.0 = Release|ARM
-		{EE050C83-148E-4402-B25C-BC667D855965}.Release|x64.ActiveCfg = Release|x64
-		{EE050C83-148E-4402-B25C-BC667D855965}.Release|x64.Build.0 = Release|x64
-		{EE050C83-148E-4402-B25C-BC667D855965}.Release|x86.ActiveCfg = Release|x86
-		{EE050C83-148E-4402-B25C-BC667D855965}.Release|x86.Build.0 = Release|x86
+		{AF902675-CE7B-4601-96F6-F0821BE0A44A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AF902675-CE7B-4601-96F6-F0821BE0A44A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AF902675-CE7B-4601-96F6-F0821BE0A44A}.Debug|ARM.ActiveCfg = Debug|ARM
+		{AF902675-CE7B-4601-96F6-F0821BE0A44A}.Debug|ARM.Build.0 = Debug|ARM
+		{AF902675-CE7B-4601-96F6-F0821BE0A44A}.Debug|x64.ActiveCfg = Debug|x64
+		{AF902675-CE7B-4601-96F6-F0821BE0A44A}.Debug|x64.Build.0 = Debug|x64
+		{AF902675-CE7B-4601-96F6-F0821BE0A44A}.Debug|x86.ActiveCfg = Debug|x86
+		{AF902675-CE7B-4601-96F6-F0821BE0A44A}.Debug|x86.Build.0 = Debug|x86
+		{AF902675-CE7B-4601-96F6-F0821BE0A44A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AF902675-CE7B-4601-96F6-F0821BE0A44A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AF902675-CE7B-4601-96F6-F0821BE0A44A}.Release|ARM.ActiveCfg = Release|ARM
+		{AF902675-CE7B-4601-96F6-F0821BE0A44A}.Release|ARM.Build.0 = Release|ARM
+		{AF902675-CE7B-4601-96F6-F0821BE0A44A}.Release|x64.ActiveCfg = Release|x64
+		{AF902675-CE7B-4601-96F6-F0821BE0A44A}.Release|x64.Build.0 = Release|x64
+		{AF902675-CE7B-4601-96F6-F0821BE0A44A}.Release|x86.ActiveCfg = Release|x86
+		{AF902675-CE7B-4601-96F6-F0821BE0A44A}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

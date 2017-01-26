@@ -1,1 +1,0 @@
-MainPackage=C:\Users\speed\Documents\GitHub\Slam-Mix-Marathon\Slam Mix marathon\Mix marathon\bin\x64\Release\MixMarathon_1.1.7.0_x64.appx
