@@ -166,14 +166,6 @@
             <Grid x:Name="StatusPanel" Grid.Row="2" Grid.ColumnSpan="2" Margin="12,10,23,5">
                 <Image Source="/Assets/MixMarathon.png" Stretch="Uniform" VerticalAlignment="Top" HorizontalAlignment="Stretch" MaxWidth="600"/>
             </Grid>
-            <Grid x:Name="AdGrid" HorizontalAlignment="Stretch" Grid.Row="1" Grid.Column="1">
-                <Universal:AdMediatorControl x:Name="MixDetailAdControl" Visibility="Collapsed" Id="DE447136-5C4E-44E8-8A2A-8FE16CD67400" HorizontalAlignment="Center" Height="50" Width="300" />
-                <Universal:AdMediatorControl x:Name="ADControl" Id="EE4FD6FF-C498-4A60-AB33-2539B2416535" HorizontalAlignment="Center" 
-                                             AdMediatorFilled="ADControl_AdMediatorFilled"
-                                             AdMediatorError="ADControl_AdMediatorError" Height="250" Width="300" />
-                
-            </Grid>
-
         </Grid>
     </ScrollViewer>
 </UserControl>

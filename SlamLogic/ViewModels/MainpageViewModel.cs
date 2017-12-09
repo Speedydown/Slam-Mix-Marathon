@@ -79,7 +79,7 @@ namespace SlamLogic.ViewModels
         {
             get
             {
-                return CurrentMix == null && !IsLoading && Mixes.Count() != 0;
+                return CurrentMix == null && !IsLoading && Mixes?.Count() > 0;
             }
         }
 

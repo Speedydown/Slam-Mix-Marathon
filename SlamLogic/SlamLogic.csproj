@@ -146,12 +146,7 @@
       <Name>Microsoft Visual C++ 2013 Runtime Package for Windows Universal</Name>
     </SDKReference>
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\win10apps.nl\Nuget\BaseLogic\BaseLogic_Uwp.csproj">
-      <Project>{af902675-ce7b-4601-96f6-f0821be0a44a}</Project>
-      <Name>BaseLogic_Uwp</Name>
-    </ProjectReference>
-  </ItemGroup>
+  <Import Project="..\..\win10apps.nl\Nuget\BaseLogic\BaseLogicShared.projitems" Label="Shared" />
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
   </PropertyGroup>

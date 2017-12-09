@@ -1,5 +1,5 @@
-MainPackage=C:\Users\speed\Documents\GitHub\Slam-Mix-Marathon\Mix marathon\bin\ARM\Release\MixMarathon_1.2.1.0_ARM.appx
-ResourcePack=C:\Users\speed\Documents\GitHub\Slam-Mix-Marathon\Mix marathon\bin\ARM\Release\MixMarathon_1.2.1.0_scale-100.appx
-ResourcePack=C:\Users\speed\Documents\GitHub\Slam-Mix-Marathon\Mix marathon\bin\ARM\Release\MixMarathon_1.2.1.0_scale-125.appx
-ResourcePack=C:\Users\speed\Documents\GitHub\Slam-Mix-Marathon\Mix marathon\bin\ARM\Release\MixMarathon_1.2.1.0_scale-150.appx
-ResourcePack=C:\Users\speed\Documents\GitHub\Slam-Mix-Marathon\Mix marathon\bin\ARM\Release\MixMarathon_1.2.1.0_scale-400.appx
+MainPackage=D:\Own Projects\Slam-Mix-Marathon\Mix marathon\bin\ARM\Release\MixMarathon_1.2.2.0_ARM.appx
+ResourcePack=D:\Own Projects\Slam-Mix-Marathon\Mix marathon\bin\ARM\Release\MixMarathon_1.2.2.0_scale-100.appx
+ResourcePack=D:\Own Projects\Slam-Mix-Marathon\Mix marathon\bin\ARM\Release\MixMarathon_1.2.2.0_scale-125.appx
+ResourcePack=D:\Own Projects\Slam-Mix-Marathon\Mix marathon\bin\ARM\Release\MixMarathon_1.2.2.0_scale-150.appx
+ResourcePack=D:\Own Projects\Slam-Mix-Marathon\Mix marathon\bin\ARM\Release\MixMarathon_1.2.2.0_scale-400.appx

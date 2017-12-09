@@ -39,11 +39,6 @@ namespace Slam__Mix_Marathon.Controls
             System.Diagnostics.Debug.WriteLine(Window.Current.Bounds);
         }
 
-        private void ADControl_AdMediatorFilled(object sender, Microsoft.AdMediator.Core.Events.AdSdkEventArgs e)
-        {
-
-        }
-
         private async void PlayButton_Click(object sender, RoutedEventArgs e)
         {
             if (DataContext != null && DataContext is Mix)
@@ -111,11 +106,6 @@ namespace Slam__Mix_Marathon.Controls
         {
             if (DataContext != null && DataContext is Mix)
                 MixDataHandler.instance.UpdateMix(DataContext as Mix);
-        }
-
-        private void ADControl_AdMediatorError(object sender, Microsoft.AdMediator.Core.Events.AdMediatorFailedEventArgs e)
-        {
-            AdGrid.Visibility = Visibility.Collapsed;
         }
     }
 }

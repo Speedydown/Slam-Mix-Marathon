@@ -36,7 +36,8 @@ namespace SlamLogic.DataHandlers
             "Identity",
             "Sunnery & Ryan",
             "Mainstage",
-            "SLAM! MixMarathon XXL"
+            "SLAM! MixMarathon XXL",
+            "SLAM! MixMarathon"
         };
 
         public Warning MixDataWarning { get; private set; }

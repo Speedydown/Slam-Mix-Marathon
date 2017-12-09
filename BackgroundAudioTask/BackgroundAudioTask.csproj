@@ -101,10 +101,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\win10apps.nl\Nuget\BaseLogic\BaseLogic_Uwp.csproj">
-      <Project>{af902675-ce7b-4601-96f6-f0821be0a44a}</Project>
-      <Name>BaseLogic_Uwp</Name>
-    </ProjectReference>
     <ProjectReference Include="..\SlamLogic\SlamLogic.csproj">
       <Project>{d897d491-d2ba-42d3-a1cf-8e51824412f5}</Project>
       <Name>SlamLogic</Name>
@@ -114,8 +110,8 @@
     <SDKReference Include="Microsoft.VCLibs, Version=14.0">
       <Name>Visual C++ 2015 Runtime for Universal Windows Platform Apps</Name>
     </SDKReference>
-    <SDKReference Include="SQLite.UAP.2015, Version=3.10.2">
-      <Name>SQLite for Universal App Platform %28SQLite.UAP.2015, Version=3.10.2%29</Name>
+    <SDKReference Include="SQLite.UWP.2015, Version=3.19.3">
+      <Name>SQLite for Universal Windows Platform</Name>
     </SDKReference>
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
